@@ -1,7 +1,7 @@
-diff -r -u -N grub-0.5.94.old/grub/asmstub.c grub-0.5.94/grub/asmstub.c
---- grub-0.5.94.old/grub/asmstub.c	Tue Feb 29 02:56:52 2000
-+++ grub-0.5.94/grub/asmstub.c	Sun Apr 16 15:13:02 2000
-@@ -793,7 +793,7 @@
+diff -urN grub-0.5.95.orig/grub/asmstub.c grub-0.5.95/grub/asmstub.c
+--- grub-0.5.95.orig/grub/asmstub.c	Sat May 20 23:35:20 2000
++++ grub-0.5.95/grub/asmstub.c	Mon Jul 10 20:28:48 2000
+@@ -842,7 +842,7 @@
  
  /* returns packed BIOS/ASCII code */
  int
@@ -10,10 +10,10 @@ diff -r -u -N grub-0.5.94.old/grub/asmstub.c grub-0.5.94/grub/asmstub.c
  {
    int c;
  
-diff -r -u -N grub-0.5.94.old/stage2/asm.S grub-0.5.94/stage2/asm.S
---- grub-0.5.94.old/stage2/asm.S	Mon Feb  7 06:14:46 2000
-+++ grub-0.5.94/stage2/asm.S	Sun Apr 16 15:13:02 2000
-@@ -1992,7 +1992,7 @@
+diff -urN grub-0.5.95.orig/stage2/asm.S grub-0.5.95/stage2/asm.S
+--- grub-0.5.95.orig/stage2/asm.S	Sat Jun  3 08:08:05 2000
++++ grub-0.5.95/stage2/asm.S	Mon Jul 10 20:28:48 2000
+@@ -2012,7 +2012,7 @@
   *			%al = ASCII character
   */
  
@@ -22,10 +22,10 @@ diff -r -u -N grub-0.5.94.old/stage2/asm.S grub-0.5.94/stage2/asm.S
  	push	%ebp
  	push	%ebx			/* save %ebx */
  
-diff -r -u -N grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
---- grub-0.5.94.old/stage2/builtins.c	Tue Feb 29 22:47:48 2000
-+++ grub-0.5.94/stage2/builtins.c	Sun Apr 16 15:13:02 2000
-@@ -52,6 +52,12 @@
+diff -urN grub-0.5.95.orig/stage2/builtins.c grub-0.5.95/stage2/builtins.c
+--- grub-0.5.95.orig/stage2/builtins.c	Thu Jun  1 08:26:52 2000
++++ grub-0.5.95/stage2/builtins.c	Mon Jul 10 20:29:43 2000
+@@ -54,6 +54,12 @@
  int grub_timeout = -1;
  /* The BIOS drive map.  */
  static unsigned short bios_drive_map[DRIVE_MAP_SIZE + 1];
@@ -38,7 +38,7 @@ diff -r -u -N grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
  
  /* Initialize the data for builtins.  */
  void
-@@ -75,6 +81,18 @@
+@@ -77,6 +83,18 @@
    grub_timeout = -1;
  }
  
@@ -56,10 +56,10 @@ diff -r -u -N grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
 +
  /* Print which sector is read when loading a file.  */
  static void
- disk_read_print_func (int sector)
-@@ -1870,6 +1888,92 @@
+ disk_read_print_func (int sector, int offset, int length)
+@@ -1973,6 +1991,92 @@
  };
- 
+   
  
 +/* keytable */
 +static int
@@ -150,7 +150,7 @@ diff -r -u -N grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
  /* makeactive */
  static int
  makeactive_func (char *arg, int flags)
-@@ -2948,11 +3053,13 @@
+@@ -3086,11 +3190,13 @@
    &builtin_geometry,
    &builtin_help,
    &builtin_hide,
@@ -161,13 +161,13 @@ diff -r -u -N grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
    &builtin_ioprobe,
    &builtin_kernel,
 +  &builtin_keytable,
+   &builtin_lock,
    &builtin_makeactive,
    &builtin_map,
-   &builtin_module,
-diff -r -u -N grub-0.5.94.old/stage2/char_io.c grub-0.5.94/stage2/char_io.c
---- grub-0.5.94.old/stage2/char_io.c	Fri Feb 18 05:34:42 2000
-+++ grub-0.5.94/stage2/char_io.c	Sun Apr 16 15:13:02 2000
-@@ -120,6 +120,15 @@
+diff -urN grub-0.5.95.orig/stage2/char_io.c grub-0.5.95/stage2/char_io.c
+--- grub-0.5.95.orig/stage2/char_io.c	Tue May 30 17:58:09 2000
++++ grub-0.5.95/stage2/char_io.c	Mon Jul 10 20:28:48 2000
+@@ -126,6 +126,15 @@
  }
  
  #ifndef STAGE1_5
@@ -183,16 +183,16 @@ diff -r -u -N grub-0.5.94.old/stage2/char_io.c grub-0.5.94/stage2/char_io.c
  int
  grub_sprintf (char *buffer, const char *format, ...)
  {
-@@ -897,4 +906,5 @@
+@@ -903,4 +912,5 @@
    grub_memmove (dest, src, grub_strlen (src) + 1);
    return dest;
  }
 +
  #endif /* ! STAGE1_5 */
-diff -r -u -N grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
---- grub-0.5.94.old/stage2/shared.h	Tue Feb 22 08:25:17 2000
-+++ grub-0.5.94/stage2/shared.h	Sun Apr 16 15:13:02 2000
-@@ -554,6 +554,7 @@
+diff -urN grub-0.5.95.orig/stage2/shared.h grub-0.5.95/stage2/shared.h
+--- grub-0.5.95.orig/stage2/shared.h	Tue May 30 17:58:09 2000
++++ grub-0.5.95/stage2/shared.h	Mon Jul 10 20:28:48 2000
+@@ -560,6 +560,7 @@
  void track_int13 (int drive);
  
  /* The key map.  */
@@ -200,7 +200,7 @@ diff -r -u -N grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
  extern unsigned short bios_key_map[];
  extern unsigned short ascii_key_map[];
  extern unsigned short io_map[];
-@@ -619,6 +620,7 @@
+@@ -625,6 +626,7 @@
  
  /* Wait for a keypress, and return its packed BIOS/ASCII key code.
     Use ASCII_CHAR(ret) to extract the ASCII code. */
@@ -208,7 +208,7 @@ diff -r -u -N grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
  int getkey (void);
  
  /* Like GETKEY, but doesn't block, and returns -1 if no keystroke is
-@@ -676,9 +678,11 @@
+@@ -682,9 +684,11 @@
  
  extern kernel_t kernel_type;
  extern int grub_timeout;
@@ -220,7 +220,7 @@ diff -r -u -N grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
  char *skip_to (int after_equal, char *cmdline);
  struct builtin *find_command (char *command);
  void print_cmdline_message (int forever);
-@@ -688,6 +692,8 @@
+@@ -694,6 +698,8 @@
  
  /* C library replacement functions with identical semantics. */
  void grub_printf (const char *format,...);
@@ -229,10 +229,10 @@ diff -r -u -N grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
  int grub_sprintf (char *buffer, const char *format, ...);
  int grub_tolower (int c);
  int grub_isspace (int c);
-diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
---- grub-0.5.94.old/stage2/stage2.c	Wed Jan  5 07:02:22 2000
-+++ grub-0.5.94/stage2/stage2.c	Sun Apr 16 15:16:41 2000
-@@ -19,8 +19,24 @@
+diff -urN grub-0.5.95.orig/stage2/stage2.c grub-0.5.95/stage2/stage2.c
+--- grub-0.5.95.orig/stage2/stage2.c	Mon Jun 12 16:01:28 2000
++++ grub-0.5.95/stage2/stage2.c	Mon Jul 10 20:33:50 2000
+@@ -20,8 +20,24 @@
  
  #include "shared.h"
  
@@ -257,7 +257,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  static char *
  get_entry (char *list, int num, int nested)
  {
-@@ -40,11 +56,11 @@
+@@ -41,11 +57,11 @@
  
  
  static void
@@ -271,7 +271,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  
    if (first)
      putchar (DISP_UP);
-@@ -53,15 +69,15 @@
+@@ -54,15 +70,15 @@
  
    menu_entries = get_entry (menu_entries, first, 0);
  
@@ -290,7 +290,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  	    {
  	      putchar (*menu_entries);
  	      j++;
-@@ -73,11 +89,11 @@
+@@ -74,11 +90,11 @@
        if (*(menu_entries - 1))
  	menu_entries++;
  
@@ -304,7 +304,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  
    if (*menu_entries)
      putchar (DISP_DOWN);
-@@ -85,64 +101,61 @@
+@@ -86,64 +102,61 @@
      putchar (' ');
  }
  
@@ -397,75 +397,79 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  }
  
  /* Set the attribute of the line Y to normal state.  */
-@@ -179,27 +192,31 @@
+@@ -180,7 +193,7 @@
     */
  
  restart:
 -  while (entryno > 11)
 +  while (entryno > menu_height)
      {
-       first_entry++;
-       entryno--;
-     }
- 
--  init_page ();
-+  cls();
+       first_entry ++;
+       entryno --;
+@@ -189,21 +202,26 @@
+   /* Only display the menu if we're not out of time. */
+   if (grub_timeout != 0)
+     {
+-      init_page ();
++      cls();
  #ifndef GRUB_UTIL
-   nocursor ();
+       nocursor ();
  #endif
  
--  print_border (3, 12);
-+  color_bordered_box(4, 2, 72, 15, 0x10);
-+  color_box         (5, 3, 70, 13, 0x1F);
-+  gotoxy(8, 4);
-+  grub_printf(msgs[0]);
+-      print_border (3, 12);
++      color_bordered_box(4, 2, 72, 15, 0x10);
++      color_box         (5, 3, 70, 13, 0x1F);
++      gotoxy(8, 4);
++      grub_printf(msgs[0]);
++  
++      color_box(menu_x_border, menu_y_border + 1, menu_width + 2, menu_height, normal_color);
++ 
++      grub_printf ("\n\n\n\n");
  
-+  color_box(menu_x_border, menu_y_border + 1, menu_width + 2, menu_height, normal_color);
-+
-+  grub_printf ("\n\n\n\n");
  #ifdef GRUB_UTIL
--  grub_printf ("\n
--      Use the up and down arrows for selecting which entry is highlighted.\n");
-+  grub_printf ("Use the up and down arrows for selecting which entry is highlighted.\n");
+-      grub_printf ("\n\
+-      Use the up and down arrows to select which entry is highlighted.\n");
++      grub_printf ("Use the up and down arrows for selecting which entry is highlighted.\n");
  #else
--  grub_printf ("\n
--      Use the %c and %c keys for selecting which entry is highlighted.\n",
--	  DISP_UP, DISP_DOWN);
-+  grub_printf_centered(msgs[1], DISP_UP, DISP_DOWN);
+-      grub_printf ("\n\
+-      Use the %c and %c keys to select which entry is highlighted.\n",
+-		   DISP_UP, DISP_DOWN);
++      grub_printf_centered(msgs[1], DISP_UP, DISP_DOWN);
  #endif
-+  printf("\n");
++      printf("\n");
  
-   if (password)
-     {
-@@ -208,10 +225,10 @@
-     }
-   else
-     {
--      if (config_entries)
--	printf ("       Press enter to boot the selected OS, \'e\' to edit the
--        commands before booting, or \'c\' for a command-line.");
--      else
-+      if (config_entries) {
-+	grub_printf_centered(msgs[2]); printf("\n");
-+	grub_printf_centered(msgs[3]);
-+      } else
- 	printf (
- "      Press \'b\' to boot, \'e\' to edit the selected command in the
-       boot sequence, \'c\' for a command-line, \'o\' to open a new line
-@@ -219,10 +236,10 @@
+       if (! auth && password)
+ 	{
+@@ -213,11 +231,10 @@
+ 	}
+       else
+ 	{
+-	  if (config_entries)
+-	    printf ("\
+-      Press enter to boot the selected OS, \'e\' to edit the\n\
+-      commands before booting, or \'c\' for a command-line.");
+-	  else
++          if (config_entries) {
++	    grub_printf_centered(msgs[2]); printf("\n");
++	    grub_printf_centered(msgs[3]);
++          } else
+ 	    printf ("\
+       Press \'b\' to boot, \'e\' to edit the selected command in the\n\
+       boot sequence, \'c\' for a command-line, \'o\' to open a new line\n\
+@@ -225,10 +242,10 @@
        selected line, or escape to go back to the main menu.");
+ 	}
+ 
+-      print_entries (3, 12, first_entry, menu_entries);
++      print_entries (first_entry, menu_entries);
+ 
+       /* highlight initial line */
+-      set_line_highlight (4 + entryno);
++      set_line_highlight (menu_y_border + 1 + entryno);
      }
- 
--  print_entries (3, 12, first_entry, menu_entries);
-+  print_entries (first_entry, menu_entries);
- 
-   /* highlight initial line */
--  set_line_highlight (4 + entryno);
-+  set_line_highlight (menu_y_border + 1 + entryno);
  
    /* XX using RT clock now, need to initialize value */
-   while ((time1 = getrtsecs()) == 0xFF);
-@@ -242,9 +259,10 @@
+@@ -249,9 +266,10 @@
  
  	  /* else not booting yet! */
  	  time2  = time1;
@@ -479,7 +483,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  	  grub_timeout--;
  	}
  
-@@ -254,42 +272,42 @@
+@@ -261,42 +279,42 @@
  
  	  if (grub_timeout >= 0)
  	    {
@@ -534,7 +538,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  		}
  	    }
  
-@@ -304,7 +322,7 @@
+@@ -311,7 +329,7 @@
  	    {
  	      if ((c == 'd') || (c == 'o') || (c == 'O'))
  		{
@@ -543,7 +547,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  
  		  /* insert after is almost exactly like insert before */
  		  if (c == 'o')
-@@ -342,12 +360,12 @@
+@@ -355,12 +373,12 @@
  
  		      if (entryno >= num_entries)
  			entryno--;
@@ -559,7 +563,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  		}
  
  	      cur_entry = menu_entries;
-@@ -428,8 +446,12 @@
+@@ -458,8 +476,12 @@
  		     but it doesn't hurt to do it always */
  		  *(new_heap++) = 0;
  
@@ -574,7 +578,7 @@ diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
  		  else
  		    {
  		      cls ();
-@@ -695,6 +717,8 @@
+@@ -723,6 +745,8 @@
  
  	  grub_close ();
  	}
