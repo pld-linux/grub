@@ -7,7 +7,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.94
-Release:	1.2
+Release:	2
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -72,6 +72,40 @@ operacionais comerciais para PC.
 
 O GRUB pode ser uma boa alternativa ao LILO, para usuários mais
 avançados e que querem mais recursos de seu boot loader.
+
+%package nb
+Summary:	Grub's network boot image for the Network Image Proposal
+Summary(pl):	Obraz dla gruba s³u¿±cy technologii Network Image Proposal
+Group:		Networking/Admin
+
+%description nb
+This is a network boot image for the Network Image Proposal used by
+some network boot loaders, such as Etherboot. This is mostly the same
+as Stage 2, but it also sets up a network and loads a configuration
+file from the network.
+
+%description nb -l pl
+To jest obraz s³u¿±cy zdalnemu uruchamianiu komputera bezdyskowego,
+oparty na standardzie nazwanym 'Network Image Proposal'. Jest niemal
+identyczny z tym ze Stage 2, ale uruchamia sieæ oraz ³aduje z niej
+plik konfiguracyjny.
+
+%package pxe
+Summary:	Grub's network boot image for the Preboot Execution Environment
+Summary(pl):	Obraz dla gruba s³u¿±cy technologii Preboot Execution Environment
+Group:		Networking/Admin
+
+%description pxe
+This is another network boot image for the Preboot Execution
+Environment used by several Netboot ROMs. This is identical to nbgrub,
+except for the format. This is mostly the same as Stage 2, but it also
+sets up a network and loads a configuration file from the network.
+
+%description pxe -l pl
+To jest obraz s³u¿±cy zdalnemu uruchamianiu komputera bezdyskowego,
+oparty na standardzie nazwanym 'Preboot Execution Environment' (PXE).
+Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
+³aduje z niej plik konfiguracyjny.
 
 %prep
 %setup -q
@@ -165,3 +199,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*.info*
 %{_mandir}/*/*
 /etc/sysconfig/rc-boot/%{name}_functions.sh
+
+%files nb
+%defattr(644,root,root,755)
+%{_datadir}/grub/nbgrub
+
+%files pxe
+%defattr(644,root,root,755)
+%{_datadir}/grub/pxegrub
