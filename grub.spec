@@ -1,7 +1,9 @@
 Summary:	GRand Unified Bootloader
+Summary(es):	GRUB boot loader
+Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.5.94
-Release:	3
+Release:	4
 License:	GPL
 Group:		Base
 Group(pl):	Podstawowe
@@ -10,6 +12,9 @@ Source1:	install_grub_on_floppy
 Source2:	grub-linux-menu.lst
 Patch0:		grub-config.patch
 Patch1:		grub-info.patch
+Patch2:		grub-reiserfs.patch
+Patch3:		grub-skipcdroms.patch
+Patch4:		grub-bigpatch.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -20,6 +25,26 @@ operating systems. In addition to loading the Linux and *BSD kernels,
 it implements the Multiboot standard, which allows for flexible
 loading of multiple boot images (needed for modular kernels such as
 the GNU Hurd).
+
+%description -l es
+Éste es GRUB - Grand Unified Boot Loader - un administrador de
+inicialización capaz de entrar en la mayoría de los sistemas
+operacionales libres - Linux, FreeBSD, NetBSD, GNU Mach, etc. como
+también en la mayoría de los sistemas operacionales comerciales para
+PC.
+
+El administrador GRUB puede ser una buena alternativa a LILO, para
+usuarios conmás experiencia y que deseen obtener más recursos de su
+cargador de inicialización (boot loader).
+
+%description -l pt
+Esse é o GRUB - Grand Unified Boot Loader - um gerenciador de boot
+capaz de entrar na maioria dos sistemas operacionais livres - Linux,
+FreeBSD, NetBSD, GNU Mach, etc. assim como na maioria dos sistemas
+operacionais comerciais para PC.
+
+O GRUB pode ser uma boa alternativa ao LILO, para usuários mais
+avançados e que querem mais recursos de seu boot loader.
 
 %description -l pl
 GRUB jest bootloaderem na licencji GNU, maj±cym na celu unifikacjê
@@ -32,6 +57,10 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+
 rm -rf doc/*info*
 
 %build
