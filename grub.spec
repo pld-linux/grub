@@ -25,6 +25,7 @@ Patch4:		%{name}-graphics.patch
 Patch5:		%{name}-splashimagehelp.patch
 Patch6:		%{name}-graphics-bootterm.patch
 Patch7:		%{name}-special-device-names.patch
+URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
