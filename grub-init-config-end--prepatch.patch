@@ -1,0 +1,35 @@
+--- grub-0.5.96.1/stage2/builtins.c.pix	Thu Oct 19 15:50:00 2000
++++ grub-0.5.96.1/stage2/builtins.c	Sat Dec  9 14:57:42 2000
+@@ -96,6 +96,11 @@
+   grub_timeout = -1;
+ }
+ 
++void
++init_config_end (void)
++{
++}
++
+ /* Print which sector is read when loading a file.  */
+ static void
+ disk_read_print_func (int sector, int offset, int length)
+--- grub-0.5.96.1/stage2/shared.h.pix	Thu Oct 19 11:27:52 2000
++++ grub-0.5.96.1/stage2/shared.h	Sat Dec  9 14:58:09 2000
+@@ -763,6 +763,7 @@
+ 
+ void init_builtins (void);
+ void init_config (void);
++void init_config_end (void);
+ char *skip_to (int after_equal, char *cmdline);
+ struct builtin *find_command (char *command);
+ void print_cmdline_message (int forever);
+--- grub-0.5.96.1/stage2/stage2.c.pix	Thu Oct 19 11:20:45 2000
++++ grub-0.5.96.1/stage2/stage2.c	Sat Dec  9 14:58:45 2000
+@@ -899,6 +899,8 @@
+ 	  grub_close ();
+ 	}
+ 
++      init_config_end ();
++
+       if (! num_entries)
+ 	{
+ 	  /* If no acceptable config file, goto command-line, starting

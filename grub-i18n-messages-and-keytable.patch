@@ -1,0 +1,280 @@
+--- grub-0.5.96.1/stage2/shared.h.pix	Sat Dec  9 15:44:47 2000
++++ grub-0.5.96.1/stage2/shared.h	Sat Dec  9 18:01:26 2000
+@@ -607,6 +607,7 @@
+ void track_int13 (int drive);
+ 
+ /* The key map.  */
++extern char keytable_transl[];
+ extern unsigned short bios_key_map[];
+ extern unsigned short ascii_key_map[];
+ extern unsigned short io_map[];
+@@ -687,6 +688,7 @@
+ int getkey (void);
+ 
+ /* The console part of getkey.  */
++int raw_console_getkey (void);
+ int console_getkey (void);
+ 
+ /* Like GETKEY, but doesn't block, and returns -1 if no keystroke is
+@@ -749,6 +751,7 @@
+ extern kernel_t kernel_type;
+ extern int show_menu;
+ extern int grub_timeout;
++extern char *msgs[];
+ 
+ /* Control the auto fill mode.  */
+ extern int auto_fill;
+@@ -773,6 +776,8 @@
+ 
+ /* C library replacement functions with identical semantics. */
+ void grub_printf (const char *format,...);
++void grub_printf_centered_();
++#define grub_printf_centered(format...) do { grub_printf_centered_(format); grub_printf(format); } while (0);
+ int grub_sprintf (char *buffer, const char *format, ...);
+ int grub_tolower (int c);
+ int grub_isspace (int c);
+--- grub-0.5.96.1/stage2/stage2.c.pix	Sat Dec  9 15:44:47 2000
++++ grub-0.5.96.1/stage2/stage2.c	Sat Dec  9 17:25:46 2000
+@@ -22,6 +22,14 @@
+ 
+ grub_jmp_buf restart_env;
+ 
++char *msgs[] = {
++  "Welcome to GRUB the operating system chooser!",
++  "Use the %c and %c keys for selecting which entry is highlighted.",
++  "Press enter to boot the selected OS, \'e\' to edit the",
++  "commands before booting, or \'c\' for a command-line.",
++  "The highlighted entry will be booted automatically in %d seconds.",
++};
++
+ static char *
+ get_entry (char *list, int num, int nested)
+ {
+@@ -330,7 +338,7 @@
+       /* Disable the auto fill mode.  */
+       auto_fill = 0;
+       
+-      init_page ();
++      cls ();
+ #ifndef GRUB_UTIL
+ # ifdef SUPPORT_SERIAL
+       if (terminal & TERMINAL_CONSOLE)
+@@ -338,6 +346,9 @@
+ 	nocursor ();
+ #endif /* ! GRUB_UTIL */
+ 
++      gotoxy(8, 2);
++      grub_printf(msgs[0]);
++
+       print_border (3, 12);
+ 
+ #ifdef GRUB_UTIL
+@@ -359,8 +370,8 @@
+ # endif /* SUPPORT_SERIAL */
+ #endif /* ! GRUB_UTIL */
+       
+-      grub_printf ("\n\
+-      Use the %c and %c keys to select which entry is highlighted.\n",
++      printf("\n");
++      grub_printf_centered(msgs[1],
+ 		   disp_up, disp_down);
+       
+       if (! auth && password)
+@@ -372,9 +382,10 @@
+       else
+ 	{
+ 	  if (config_entries)
+-	    printf ("\
+-      Press enter to boot the selected OS, \'e\' to edit the\n\
+-      commands before booting, or \'c\' for a command-line.");
++	    {
++	      printf("\n"); grub_printf_centered(msgs[2]); 
++	      printf("\n"); grub_printf_centered(msgs[3]);
++	    }
+ 	  else
+ 	    printf ("\
+       Press \'b\' to boot, \'e\' to edit the selected command in the\n\
+@@ -408,7 +419,7 @@
+ 	  /* else not booting yet! */
+ 	  time2  = time1;
+ 	  gotoxy (3, 22);
+-	  printf ("The highlighted entry will be booted automatically in %d seconds.    ", grub_timeout);
++	  printf (msgs[4], grub_timeout);
+ 	  gotoxy (74, 4 + entryno);
+ 	  grub_timeout--;
+ 	}
+--- grub-0.5.96.1/stage2/char_io.c.pix	Tue Sep 26 15:52:29 2000
++++ grub-0.5.96.1/stage2/char_io.c	Sat Dec  9 15:53:52 2000
+@@ -134,6 +134,15 @@
+ }
+ 
+ #ifndef STAGE1_5
++void
++grub_printf_centered_ (const char *format)
++{
++  int len = (80 - strlen(format)) / 2;
++  while (len--) putchar(' ');
++}
++#endif
++
++#ifndef STAGE1_5
+ int
+ grub_sprintf (char *buffer, const char *format, ...)
+ {
+--- grub-0.5.96.1/stage2/builtins.c.pix	Sat Dec  9 15:44:47 2000
++++ grub-0.5.96.1/stage2/builtins.c	Sat Dec  9 18:05:16 2000
+@@ -73,6 +73,12 @@
+ int show_menu = 1;
+ /* The BIOS drive map.  */
+ static unsigned short bios_drive_map[DRIVE_MAP_SIZE + 1];
++char keytable_transl[256];
++char keytable_file[256] = { '\0' };
++static int keytable_load (int);
++char i18n_transl[512];
++char i18n_file[256] = { '\0' };
++static int i18n_load (int);
+ 
+ /* Initialize the data for builtins.  */
+ void
+@@ -99,6 +105,13 @@
+ void
+ init_config_end (void)
+ {
++  keytable_load(0);
++  i18n_load(0);
++}
++
++int console_getkey(void) {
++  int c = raw_console_getkey();
++  return keytable_transl[c & 0xff] + (c & 0xff00);
+ }
+ 
+ /* Print which sector is read when loading a file.  */
+@@ -2222,6 +2235,91 @@
+   "Break a command execution unless the user is authenticated."
+ };
+   
++/* keytable */
++static int
++keytable_load (int verbose)
++{
++  int i;
++  for (i = 0; i < 256; i++) keytable_transl[i] = i;
++
++  if (keytable_file[0]) {
++      int len;
++
++      if (! grub_open (keytable_file))
++	return 1;
++
++      len = grub_read (keytable_transl, 256);
++
++      grub_close ();
++      if (len != 256) return 1;
++
++      if (verbose) printf("    [keytable loaded]\n");
++  }
++  return 0;
++} 
++
++static int
++keytable_func (char *arg, int flags)
++{
++  strcpy(keytable_file, arg);
++  if (flags & BUILTIN_CMDLINE) return keytable_load(1);
++  return 0;
++}
++
++static struct builtin builtin_keytable =
++{
++  "keytable",
++  keytable_func,
++  BUILTIN_CMDLINE | BUILTIN_MENU,
++  "keytable FILE",
++  "Change the keyboard map. The file is a translation table."
++  "For example, for azerty (french) keyboard, at offset 'q' you find 'a'"
++};
++
++
++/* i18n */
++static int
++i18n_load (int verbose)
++{
++  int len, i;
++  char *p;
++
++  if (! grub_open (i18n_file))
++    return 1;
++
++  len = grub_read (i18n_transl, 512);
++
++  grub_close ();
++  if (len == 512) return 1;
++
++  for (i = 0, p = i18n_transl; *p; p++, i++) {
++    msgs[i] = p;
++    while (*p && *p != '\n') p++;	
++    *p = 0;
++  }
++
++  if (verbose) printf("    [keytable loaded]\n");
++
++  return 0;
++}
++
++static int
++i18n_func (char *arg, int flags)
++{
++  strcpy(i18n_file, arg);
++  if (flags & BUILTIN_CMDLINE) return i18n_load(1);
++  return 0;
++}
++
++static struct builtin builtin_i18n =
++{
++  "i18n",
++  i18n_func,
++  BUILTIN_CMDLINE | BUILTIN_MENU,
++  "i18n FILE",
++  "The file must contain the different messages tranlated"
++};
++
+ 
+ /* makeactive */
+ static int
+@@ -4006,11 +4104,13 @@
+   &builtin_help,
+   &builtin_hiddenmenu,
+   &builtin_hide,
++  &builtin_i18n,
+   &builtin_impsprobe,
+   &builtin_initrd,
+   &builtin_install,
+   &builtin_ioprobe,
+   &builtin_kernel,
++  &builtin_keytable,
+   &builtin_lock,
+   &builtin_makeactive,
+   &builtin_map,
+--- grub-0.5.96.1/stage2/asm.S.pix	Thu Oct 19 11:26:43 2000
++++ grub-0.5.96.1/stage2/asm.S	Sat Dec  9 18:02:14 2000
+@@ -2029,7 +2029,7 @@
+  *			%al = ASCII character
+  */
+ 
+-ENTRY(console_getkey)
++ENTRY(raw_console_getkey)
+ 	push	%ebp
+ 	push	%ebx			/* save %ebx */
+ 
+--- grub-0.5.96.1/grub/asmstub.c.pix	Thu Oct 19 11:18:09 2000
++++ grub-0.5.96.1/grub/asmstub.c	Sat Dec  9 18:02:00 2000
+@@ -536,7 +536,7 @@
+ 
+ /* returns packed BIOS/ASCII code */
+ int
+-console_getkey (void)
++raw_console_getkey (void)
+ {
+   int c;
+ 
