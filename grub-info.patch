@@ -1,0 +1,83 @@
+diff -Nru grub-0.5.94/docs/appendices.texi grub-0.5.94.new/docs/appendices.texi
+--- grub-0.5.94/docs/appendices.texi	Mon Feb 21 09:56:10 2000
++++ grub-0.5.94.new/docs/appendices.texi	Thu Mar 23 18:00:20 2000
+@@ -182,7 +182,7 @@
+ @end example
+ 
+ This will install the grub shell @file{grub} (@pxref{Invoking the grub
+-shell}), the Multiboot checker @file{mbchk} (@pxref{Invoking mbchk}),
++shell}), the Multiboot checker @file{mbchk} (@pxref{mbchk}),
+ and the GRUB images It will also install the GRUB manual.
+ 
+ Also, the latest version is available from the CVS. The repository is:
+diff -Nru grub-0.5.94/docs/grub.texi grub-0.5.94.new/docs/grub.texi
+--- grub-0.5.94/docs/grub.texi	Thu Mar 23 18:01:23 2000
++++ grub-0.5.94.new/docs/grub.texi	Thu Mar 23 17:43:11 2000
+@@ -14,11 +14,12 @@
+ @syncodeindex pg cp
+ @syncodeindex tp cp
+ 
+-@dircategory Kernel
++@dircategory Miscellaneous:
+ @direntry
+-* GRUB: (grub).                 The GRand Unified Bootloader
+-* grub-install: (grub)Invoking grub-install.    Install GRUB on your drive
+-* mbchk: (grub)Invoking mbchk.  Check for the format of a Multiboot kernel
++* GRUB: (grub).				The GRand Unified Bootloader
++* grub-install: (grub)grub-install.	Install GRUB on your drive
++* mbchk: (grub)mbchk.			Check for the format of a Multiboot
++					kernel
+ @end direntry
+ 
+ @setchapternewpage off
+@@ -103,8 +104,8 @@
+ * Command::                     The list of available builtin commands
+ * Troubleshooting::             Error messages produced by GRUB
+ * Invoking the grub shell::     How to use the grub shell
+-* Invoking grub-install::       How to use the GRUB installer
+-* Invoking mbchk::              How to use the Multiboot checker
++* grub-install::		How to use the GRUB installer
++* mbchk::			How to use the Multiboot checker
+ 
+ Part III: The Programmer Reference Manual
+ 
+diff -Nru grub-0.5.94/docs/multiboot.texi grub-0.5.94.new/docs/multiboot.texi
+--- grub-0.5.94/docs/multiboot.texi	Thu Mar 23 18:01:23 2000
++++ grub-0.5.94.new/docs/multiboot.texi	Thu Mar 23 17:43:11 2000
+@@ -7,9 +7,9 @@
+ @syncodeindex pg cp
+ @syncodeindex tp cp
+ 
+-@dircategory Kernel
++@dircategory Miscellaneous:
+ @direntry
+-* Multiboot Specification: (multiboot).		Multiboot Specification.
++* Multiboot Specification: (multiboot).	Multiboot Specification
+ @end direntry
+ 
+ @ifinfo
+diff -Nru grub-0.5.94/docs/user-ref.texi grub-0.5.94.new/docs/user-ref.texi
+--- grub-0.5.94/docs/user-ref.texi	Thu Mar 23 18:01:23 2000
++++ grub-0.5.94.new/docs/user-ref.texi	Thu Mar 23 17:52:45 2000
+@@ -1408,8 +1408,8 @@
+ just a comment if the first character is @samp{#}.
+ 
+ 
+-@node Invoking grub-install
+-@chapter Invoking grub-install
++@node grub-install
++@chapter grub-install
+ 
+ The program @command{grub-install} installs GRUB on your drive by the
+ grub shell (@pxref{Invoking the grub shell}). You must specify the
+@@ -1451,8 +1451,8 @@
+ @end table
+ 
+ 
+-@node Invoking mbchk
+-@chapter Invoking mbchk
++@node mbchk
++@chapter mbchk
+ 
+ The program @command{mbchk} checks for the format of a Multiboot
+ kernel. We recommend using this program before booting your own kernel
