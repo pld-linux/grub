@@ -1,0 +1,148 @@
+diff -u -r grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
+--- grub-0.5.94.old/stage2/builtins.c	Fri May 19 12:08:08 2000
++++ grub-0.5.94/stage2/builtins.c	Fri May 19 12:24:48 2000
+@@ -37,6 +37,9 @@
+ static int bootdev;
+ /* True when the debug mode is turned on, and false when it is turned off.  */
+ int debug = 0;
++/* Alternate config file */
++char altconfig_file[256] = { '\0' };
++static int altconfigfile_clear(void);
+ /* The default entry.  */
+ int default_entry = 0;
+ /* The fallback entry.  */
+@@ -84,6 +87,7 @@
+ void
+ init_config_end (void)
+ {
++  altconfigfile_clear();
+   keytable_load(0);
+   i18n_load(0);
+ }
+@@ -101,6 +105,49 @@
+ }
+ 
+ 
++/* altconfigfile */
++static int
++altconfigfile_clear (void)
++{
++  int len, sector;
++  char tmp[SECTOR_SIZE];
++
++  static void disk_read_savesect_func (int s) { sector = s; }
++
++  if (altconfig_file[0] == 0) return 0;
++  if (grub_open (altconfig_file) == 0) return 1;
++
++  disk_read_hook = disk_read_savesect_func;
++  while ((len = grub_read (tmp, SECTOR_SIZE))) 
++    {
++#define RETURN { printf("failed line %d\n", __LINE__); for(len = 0; len < 90000000; len++); return 1; }
++      if (biosdisk (BIOSDISK_READ,  current_drive, &buf_geom, sector, 1, SCRATCHSEG)) RETURN;
++      if (memcmp((char *) SCRATCHADDR, tmp, len) != 0) RETURN;
++      memset((char *) SCRATCHADDR, ' ', len);
++      if (biosdisk (BIOSDISK_WRITE, current_drive, &buf_geom, sector, 1, SCRATCHSEG)) RETURN;
++    }
++  disk_read_hook = NULL;
++  grub_close ();
++  return 0;
++}
++
++static int
++altconfigfile_func (char *arg, int flags)
++{
++  strcpy(altconfig_file, arg);
++  return 0;
++}
++
++static struct builtin builtin_altconfigfile =
++{
++  "altconfigfile",
++  altconfigfile_func,
++  BUILTIN_CMDLINE | BUILTIN_MENU,
++  "altconfigfile FILE",
++  "Load FILE as the configuration file."
++};
++
++
+ /* blocklist */
+ static int
+ blocklist_func (char *arg, int flags)
+@@ -3032,6 +3079,7 @@
+ /* The table of builtin commands. Sorted in dictionary order.  */
+ struct builtin *builtin_table[] =
+ {
++  &builtin_altconfigfile,
+   &builtin_blocklist,
+   &builtin_boot,
+   &builtin_bootp,
+diff -u -r grub-0.5.94.old/stage2/char_io.c grub-0.5.94/stage2/char_io.c
+--- grub-0.5.94.old/stage2/char_io.c	Fri May 19 12:08:08 2000
++++ grub-0.5.94/stage2/char_io.c	Fri May 19 12:57:14 2000
+@@ -885,7 +885,6 @@
+    return errnum ? NULL : to;
+ }
+ 
+-#ifndef STAGE1_5
+ void *
+ grub_memset (void *start, int c, int len)
+ {
+@@ -900,6 +899,7 @@
+   return errnum ? NULL : start;
+ }
+ 
++#ifndef STAGE1_5
+ char *
+ grub_strcpy (char *dest, const char *src)
+ {
+diff -u -r grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
+--- grub-0.5.94.old/stage2/shared.h	Fri May 19 12:08:08 2000
++++ grub-0.5.94/stage2/shared.h	Fri May 19 12:57:08 2000
+@@ -553,6 +553,9 @@
+ /* Track the int13 handler to probe I/O address space.  */
+ void track_int13 (int drive);
+ 
++/* Alternate config file */
++extern char altconfig_file[];
++
+ /* The key map.  */
+ extern char keytable_transl[];
+ extern unsigned short bios_key_map[];
+diff -u -r grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
+--- grub-0.5.94.old/stage2/stage2.c	Fri May 19 12:08:08 2000
++++ grub-0.5.94/stage2/stage2.c	Fri May 19 22:37:33 2000
+@@ -718,6 +718,33 @@
+ 	  grub_close ();
+ 	}
+ 
++      if (altconfig_file[0] && grub_open (altconfig_file))
++	{
++	  char *cmdline;
++
++	  cmdline = (char *) CMDLINE_BUF;
++	  while (get_line_from_config (cmdline, NEW_HEAPSIZE))
++	    {
++	      struct builtin *builtin;
++
++	      /* Get the pointer to the builtin structure.  */
++	      builtin = find_command (cmdline);
++	      errnum = 0;
++	      if (! builtin)
++		/* Unknown command. Just skip now.  */
++		continue;
++
++	      /* Run a command found is possible.  */
++	      if (builtin->flags & BUILTIN_MENU)
++		{
++		  char *arg = skip_to (1, cmdline);
++		  (builtin->func) (arg, BUILTIN_MENU);
++		  errnum = 0;
++		}
++	    }
++	  grub_close ();
++	}
++
+       init_config_end ();
+ 
+       if (! num_entries)
