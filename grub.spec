@@ -7,7 +7,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.94
-Release:	1
+Release:	1.1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -93,6 +93,39 @@ rm -rf doc/*info*
 %{__automake}
 CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 %configure \
+	--enable-3c503 \
+	--enable-3c507 \
+	--enable-3c509 \
+	--enable-3c529 \
+	--enable-3c595 \
+	--enable-3c90x \
+	--enable-compex-rl2000-fix \
+	--enable-cs89x0 \
+	--enable-davicom \
+	--enable-depca \
+	--enable-diskless \
+	--enable-eepro \
+	--enable-eepro100 \
+	--enable-epic100 \
+	--enable-exos205 \
+	--enable-lance \
+	--enable-natsemi \
+	--enable-ne \
+	--enable-ne2100 \
+	--enable-ni5010 \
+	--enable-ni5210 \
+	--enable-ni6510 \
+	--enable-ns8390 \
+	--enable-otulip \
+	--enable-rtl8139 \
+	--enable-sis900 \
+	--enable-sk-g16 \
+	--enable-smc9000 \
+	--enable-tiara \
+	--enable-tulip \
+	--enable-via-rhine \
+	--enable-w89c840 \
+	--enable-wd \
 	--disable-auto-linux-mem-opt
 %{__make}
 
