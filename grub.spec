@@ -23,7 +23,7 @@ Patch7:		%{name}-init-config-end--prepatch.patch
 Patch8:		http://alpha.polynum.org/misc/grub-0.92_cd+ef.diff.gz
 Patch9:		%{name}-ac_fix.patch
 Patch10:	%{name}-am_fix.patch
-Patch11:	%{name}-0.92-Conectiva-vga16.patch
+Patch11:	%{name}-pcpa.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
