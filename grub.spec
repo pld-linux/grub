@@ -4,7 +4,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.92
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -24,6 +24,8 @@ Patch8:		http://alpha.polynum.org/misc/grub-0.92_cd+ef.diff.gz
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
+# needed for 'cmp' program
+Requires:	diffutils
 Provides:	bootloader
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
