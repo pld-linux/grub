@@ -10,8 +10,8 @@ Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
-Source4:	${name}-splash.xpm.gz
-Patch0:		${name}-vga16.patch
+Source4:	%{name}-splash.xpm.gz
+Patch0:		%{name}-vga16.patch
 Patch1:		%{name}-config.patch
 Patch2:		%{name}-info.patch
 Patch3:		%{name}-grub-install.patch
