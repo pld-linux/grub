@@ -1,7 +1,6 @@
 #
 # TODO:
 # cleanups, maybe more patches for lowmem (Conectiva) ?,
-# fix for BuildConflicts!
 # TESTING !!! 
 #
 Summary:	GRand Unified Bootloader
@@ -31,10 +30,11 @@ Patch10:	%{name}-0.91-splashimagehelp.patch
 Patch11:	%{name}-0.93-graphics-bootterm.patch
 Patch12:	%{name}-0.93-serial-terminfo.patch
 Patch13:	%{name}-0.93-special-device-names.patch
+Patch14:	%{name}-ncurses.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
-BuildConflicts: ncurses-devel
+BuildRequires:	ncurses-static
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
@@ -94,6 +94,7 @@ avançados e que querem mais recursos de seu boot loader.
 %patch11 -p1
 %patch12 -p0
 %patch13 -p1
+%patch14 -p1
 
 rm -rf doc/*info*
 
