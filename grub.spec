@@ -1,14 +1,13 @@
 #
-# TODO:
-# cleanups, maybe more patches for lowmem (Conectiva) ?,
-# TESTING !!! 
+# Conditional build:
+# _with_debug	- enable debugging
 #
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.93
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -100,7 +99,7 @@ rm -rf doc/*info*
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-CFLAGS="-Os -g" ; export CFLAGS
+CFLAGS="-Os %{?_with_debug:-g}" ; export CFLAGS
 %configure \
 	--disable-auto-linux-mem-opt
 %{__make}
