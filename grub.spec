@@ -12,18 +12,20 @@ Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
-Patch0:		%{name}-bootonce.patch
-Patch1:		%{name}-pwd.patch
-Patch2:		%{name}-vga16.patch
-Patch3:		%{name}-config.patch
-Patch4:		%{name}-info.patch
-Patch5:		%{name}-grub-install.patch
-Patch6:		%{name}-ezd.patch
-Patch7:		%{name}-init-config-end--prepatch.patch
-Patch8:		http://alpha.polynum.org/misc/grub-0.92_cd+ef.diff.gz
-Patch9:		%{name}-ac_fix.patch
-Patch10:	%{name}-am_fix.patch
-Patch11:	%{name}-pcpa.patch
+Patch0:		%{name}-0.90-install.in.patch
+Patch1:		%{name}-0.90-installcopyonly.patch
+Patch2:		grub-0.90-addsyncs.patch
+Patch3:		grub-0.90-staticcurses.patch
+Patch4:		grub-0.92-automake16.patch
+Patch5:		grub-0.93-endedit.patch
+Patch6:		grub-0.93-largedisk.patch
+Patch7:		grub-0.90-append.patch
+Patch8:		grub-0.91-bootonce.patch
+Patch9:		grub-0.93-graphics.patch
+Patch10:	grub-0.91-splashimagehelp.patch
+Patch11:	grub-0.93-graphics-bootterm.patch
+Patch12:	grub-0.93-serial-terminfo.patch
+Patch13:	grub-0.93-special-device-names.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -73,28 +75,29 @@ avançados e que querem mais recursos de seu boot loader.
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
+%patch1 -p1
+%patch2 -p1
 %patch3 -p1
-#%patch4 -p1
-%patch5 -p1
-%patch6 -p1
+%patch4 -p1
+%patch5 -p0
+%patch6 -p0
 %patch7 -p1
-%{?_with_exp:%patch8 -p1}
-#%patch9 -p1
-#%patch10 -p1
-#%patch11 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p0
+%patch13 -p1
 
 rm -rf doc/*info*
 
 %build
-#%{__libtoolize}
-#%{__aclocal}
-#%{__autoheader}
-#%{__autoconf}
-#%{__automake}
-# some unincluded functions ;S
-%configure2_13
+%{__libtoolize}
+%{__aclocal}
+%{__autoheader}
+%{__autoconf}
+%{__automake}
+%configure
 %{__make}
 
 %install
