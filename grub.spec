@@ -2,8 +2,10 @@
 # TODO:
 # - check VGA patch - doesn't work good, 0.92 works fine
 #
-%bcond_with	splashimage	# removes some ethernet cards
-
+# Conditional build:
+%bcond_with	splashimage	# removes some ethernet cards support
+				# (too much memory occupied?)
+#
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
@@ -164,12 +166,12 @@ CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 	--enable-ni5010 \
 	--enable-ni5210 \
 	--enable-ni6510 \
-	--enable-tulip \
 	--enable-rtl8139 \
 	--enable-sk-g16 \
 	--enable-smc9000 \
 	--enable-tg3 \
 	--enable-tiara \
+	--enable-tulip \
 	--enable-via-rhine \
 	--enable-w89c840 \
 	--enable-wd \
@@ -178,15 +180,15 @@ CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 # if you want to enable following cards for pxeboot comment out patches 8 & 9
 # and comment out --enable-e1000 & --enable-tg3 cards:
 #       --enable-ns8390 \
-#       --enable-sis900 \
-#       --enable-tulip \
+#       --enable-sis900
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
 	$RPM_BUILD_ROOT%{_datadir}/grub/
