@@ -82,7 +82,7 @@ avançados e que querem mais recursos de seu boot loader.
 rm -rf doc/*info*
 
 %build
-libtoolize --copy --force
+%{__libtoolize}
 aclocal
 autoheader
 %{__autoconf}
