@@ -1,0 +1,71 @@
+diff -Nru grub-0.5.94/docs/menu.lst grub-0.5.94.new/docs/menu.lst
+--- grub-0.5.94/docs/menu.lst	Sat Feb 26 09:48:49 2000
++++ grub-0.5.94.new/docs/menu.lst	Tue Mar 21 18:49:38 2000
+@@ -11,43 +11,43 @@
+ # Fallback to the second entry.
+ fallback 1
+ 
+-# For booting the GNU Hurd
+-title  GNU/Hurd
+-root   (hd0,0)
+-kernel /boot/gnumach.gz root=hd0s1
+-module /boot/serverboot.gz
+-
+ # For booting Linux
+ title  GNU/Linux
+ root (hd1,0)
+-kernel /vmlinuz root=/dev/hdb1
++kernel /boot/vmlinuz root=/dev/hdb1
++
++# For booting the GNU Hurd
++# title  GNU/Hurd
++# root   (hd0,0)
++# kernel /boot/gnumach.gz root=hd0s1
++# module /boot/serverboot.gz
+ 
+ # For booting Mach (getting kernel from floppy)
+-title  Utah Mach4 multiboot
+-root   (hd0,2)
+-pause  Insert the diskette now!!
+-kernel (fd0)/boot/kernel root=hd0s3
+-module (fd0)/boot/bootstrap
++# title  Utah Mach4 multiboot
++# root   (hd0,2)
++# pause  Insert the diskette now!!
++# kernel (fd0)/boot/kernel root=hd0s3
++# module (fd0)/boot/bootstrap
+ 
+ # For booting FreeBSD
+-title  FreeBSD 3.4
+-root   (hd0,2,a)
+-kernel /boot/loader
++# title  FreeBSD 3.4
++# root   (hd0,2,a)
++# kernel /boot/loader
+ 
+ # For booting OS/2
+-title OS/2
+-root  (hd0,1)
+-makeactive
++# title OS/2
++# root  (hd0,1)
++# makeactive
+ # chainload OS/2 bootloader from the first sector
+-chainloader +1
++# chainloader +1
+ # This is similar to "chainload", but loads a specific file
+-#chainloader /boot/chain.os2
++# chainloader /boot/chain.os2
+ 
+ # For booting Windows NT or Windows95
+-title Windows NT / Windows 95 boot menu
+-rootnoverify (hd0,0)
+-makeactive
+-chainloader  +1
++# title Windows NT / Windows 95 boot menu
++# rootnoverify (hd0,0)
++# makeactive
++# chainloader  +1
+ # For loading DOS if Windows NT is installed
+ # chainload /bootsect.dos
+ 
