@@ -7,7 +7,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.94
-Release:	3
+Release:	4
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -27,6 +27,9 @@ Patch6:		%{name}-graphics-bootterm.patch
 Patch7:		%{name}-special-device-names.patch
 Patch8:		%{name}-0.94-diskless-1.patch
 Patch9:		%{name}-0.94-diskless-fixtg3.patch
+Patch10:	%{name}-geometry-26kernel.patch
+Patch11:	%{name}-i2o.patch
+Patch12:	%{name}-initrdmax.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -121,6 +124,9 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 rm -rf doc/*info*
 
