@@ -1,0 +1,15 @@
+diff -ruN grub-0.93./configure.in grub-0.93/configure.in
+--- grub-0.93./configure.in	Sun May 11 01:37:03 2003
++++ grub-0.93/configure.in	Sun May 11 01:39:02 2003
+@@ -185,9 +185,9 @@
+ 
+ # Unless the user specify --without-curses, check for curses.
+ if test "x$with_curses" != "xno"; then
+-  AC_CHECK_LIB(ncurses, wgetch, [GRUB_LIBS="$GRUB_LIBS /usr/lib/libncurses.a"
++  AC_CHECK_LIB(ncurses, wgetch, [GRUB_LIBS="$GRUB_LIBS /usr/lib/libncurses.a /usr/lib/libtinfo.a"
+   AC_DEFINE(HAVE_LIBCURSES)],
+-    [AC_CHECK_LIB(curses, wgetch, [GRUB_LIBS="$GRUB_LIBS /usr/lib/libncurses.a"
++    [AC_CHECK_LIB(curses, wgetch, [GRUB_LIBS="$GRUB_LIBS /usr/lib/libncurses.a /usr/lib/libtinfo.a"
+        AC_DEFINE(HAVE_LIBCURSES)])])
+ fi
+ 
