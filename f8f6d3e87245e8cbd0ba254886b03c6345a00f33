@@ -1,0 +1,12 @@
+- updated to 0.5.94 and completly rewrited in PLD style.
+
+* Tue Jan 4 2000 Chmouel Boudjnah <chmouel@mandrakesoft.com> 0.5.93.1-3mdk
+- Add install_grub_on_floppy script (thnks b.bodin).
+- Add dvi docs (tknks b.bodin).
+
+* Mon Jan  3 2000 Chmouel Boudjnah <chmouel@mandrakesoft.com> 0.5.93.1-2mdk
+- Add %packager (thnks rpmlint).
+- Remove CFLAGS.
+
+* Mon Jan  3 2000 Chmouel Boudjnah <chmouel@mandrakesoft.com>
+- First spec file for Mandrake distribution based on debian version.
