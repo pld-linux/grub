@@ -10,7 +10,7 @@ Source1:	install_grub_on_floppy
 Patch0:		grub-config.patch
 Patch1:		grub-info.patch
 Prereq:		%{_sbindir}/fix-info-dir
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 GRUB is a GPLed bootloader intended to unify bootloading across x86
