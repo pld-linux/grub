@@ -93,11 +93,11 @@ gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
 rm -rf $RPM_BUILD_ROOT
 
 %post
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%fix_info_dir
 [ ! -r /etc/sysconfig/rc-boot/grub_functions.sh ] || ln -sf /etc/sysconfig/rc-boot/grub_functions.sh /etc/sysconfig/rc-boot/functions.sh
 
 %postun
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%fix_info_dir
 
 %files
 %defattr(644,root,root,755)
