@@ -108,8 +108,6 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
 install %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/grub/splash.xpm.gz
 
-gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -121,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz docs/menu.lst.gz
+%doc TODO BUGS NEWS ChangeLog docs/menu.lst
 %dir %{_datadir}/grub
 %{_datadir}/grub/*stage*
 %{_datadir}/grub/splash.xpm.gz
