@@ -1,0 +1,43 @@
+	From H.J. Lu (hjl@gnu.org)
+	* stage2/disk_io.c (part_start): Use unsigned long to support
+	large disks (#80980)
+	(part_length): Likewise.
+	* stage2/shared.h (part_start): Likewise.
+	(part_length): Likewise.
+
+Index: stage2/disk_io.c
+===================================================================
+RCS file: /cvsroot/grub/grub/stage2/disk_io.c,v
+retrieving revision 1.52
+diff -u -r1.52 disk_io.c
+--- stage2/disk_io.c	4 Dec 2002 00:45:13 -0000	1.52
++++ stage2/disk_io.c	9 Jan 2003 19:46:10 -0000
+@@ -107,8 +107,8 @@
+ #endif /* NO_BLOCK_FILES */
+ 
+ /* these are the translated numbers for the open partition */
+-long part_start;
+-long part_length;
++unsigned long part_start;
++unsigned long part_length;
+ 
+ int current_slice;
+ 
+Index: stage2/shared.h
+===================================================================
+RCS file: /cvsroot/grub/grub/stage2/shared.h,v
+retrieving revision 1.90
+diff -u -r1.90 shared.h
+--- stage2/shared.h	3 Dec 2002 00:02:53 -0000	1.90
++++ stage2/shared.h	9 Jan 2003 19:46:10 -0000
+@@ -637,8 +637,8 @@
+   unsigned long flags;
+ };
+ 
+-extern long part_start;
+-extern long part_length;
++extern unsigned long part_start;
++extern unsigned long part_length;
+ 
+ extern int current_slice;
+ 
