@@ -82,15 +82,15 @@ avançados e que querem mais recursos de seu boot loader.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
+%patch4 -p0
 %patch5 -p0
-%patch6 -p0
+%patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
-%patch12 -p0
+%patch11 -p0
+%patch12 -p1
 
 rm -rf doc/*info*
 
