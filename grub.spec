@@ -13,6 +13,7 @@ Source2:	grub-linux-menu.lst
 Patch0:		grub-config.patch
 Patch1:		grub-info.patch
 Patch2:		grub-bigpatch.patch
+Provides:	bootloader
 ExcludeArch:	sparc sparc64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
