@@ -2,17 +2,17 @@ Summary:	GRand Unified Bootloader
 Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
-Version:	0.5.95
-Release:	2
+Version:	0.5.96.1
+Release:	1
 License:	GPL
 Group:		Base
+Group(de):	Gründsätzlich
 Group(pl):	Podstawowe
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-Source1:	install_grub_on_floppy
-Source2:	grub-linux-menu.lst
-Patch0:		grub-config.patch
-Patch1:		grub-info.patch
-Patch2:		grub-bigpatch.patch
+Source1:	install_%{name}_on_floppy
+Source2:	%{name}-linux-menu.lst
+Patch0:		%{name}-config.patch
+Patch1:		%{name}-info.patch
 Provides:	bootloader
 ExcludeArch:	sparc sparc64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -57,7 +57,6 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %setup -q
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
 
 rm -rf doc/*info*
 
@@ -75,7 +74,7 @@ perl -p -i -e 's|VERSION|%{version}|' $RPM_BUILD_ROOT%{_sbindir}/$(basename %{SO
 
 # dangerous ?
 install -d $RPM_BUILD_ROOT/boot/grub/
-mv $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* $RPM_BUILD_ROOT/boot/grub/
+mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* $RPM_BUILD_ROOT/boot/grub/
 install %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
 
 gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
