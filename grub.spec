@@ -1,6 +1,7 @@
 #
 # TODO:
 # cleanups, maybe more patches for lowmem (Conectiva) ?,
+# fix for BuildConflicts!
 # TESTING !!! 
 #
 Summary:	GRand Unified Bootloader
@@ -33,6 +34,7 @@ Patch13:	%{name}-0.93-special-device-names.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
+BuildConflicts: ncurses-devel
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
