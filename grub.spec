@@ -62,7 +62,6 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 rm -rf doc/*info*
 
 %build
-LDFLAGS="-s"; export LDFLAGS
 %configure
 %{__make}
 
@@ -79,8 +78,7 @@ install -d $RPM_BUILD_ROOT/boot/grub/
 mv $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* $RPM_BUILD_ROOT/boot/grub/
 install %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
 
-gzip -9nf $RPM_BUILD_ROOT{%{_infodir}/*,%{_mandir}/*/*} \
-	TODO BUGS NEWS ChangeLog docs/menu.lst
+gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
 
 %clean
 rm -rf $RPM_BUILD_ROOT
