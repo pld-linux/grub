@@ -3,7 +3,7 @@ Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
-Version:	0.92
+Version:	0.93
 Release:	0.1
 License:	GPL
 Group:		Base
@@ -73,17 +73,17 @@ avançados e que querem mais recursos de seu boot loader.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 #%patch2 -p1
 %patch3 -p1
-%patch4 -p1
+#%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %{?_with_exp:%patch8 -p1}
 #%patch9 -p1
 #%patch10 -p1
-%patch11 -p1
+#%patch11 -p1
 
 rm -rf doc/*info*
 
