@@ -1,4 +1,8 @@
-# _with_exp	- with experimental (incomatible) features
+#
+# TODO:
+# cleanups, maybe more patches for lowmem (Conectiva) ?,
+# TESTING !!! 
+#
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
