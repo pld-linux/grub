@@ -1,0 +1,32 @@
+#!/bin/sh
+## creates a boot.img file in the current directory
+## this file contains a generic grub boot floppy
+## just create the floppy with dd if=./boot.img of=/dev/fd0
+
+## B. Bodin january 2000
+
+[[ "$UID" == "0" ]] || {
+    echo "You should be root"
+    exit 1;
+}
+
+grubdir=/boot/grub/
+mount_point=/tmp/floppy
+image=boot.img
+
+rm -rf $image $mount_point
+dd if=/dev/zero of=$image bs=1k count=1440
+/sbin/mke2fs -F $image  >> /dev/null
+mkdir -p $mount_point
+mount  -o loop -t ext2 $image $mount_point
+mkdir -p $mount_point/boot/grub
+cp $grubdir/stage1 $mount_point/boot/grub
+cp $grubdir/stage2 $mount_point/boot/grub
+cp /usr/doc/grub-VERSION/menu.lst $mount_point/boot/grub
+umount $mount_point
+
+/usr/sbin/grub --batch << EOF >> /dev/null
+device (fd0) ./$image
+install (fd0)/boot/grub/stage1 (fd0) (fd0)/boot/grub/stage2 p
+quit
+EOF
