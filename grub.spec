@@ -3,7 +3,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.90
-Release:	2
+Release:	3
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
