@@ -6,10 +6,6 @@ Version:	0.91
 Release:	2
 License:	GPL
 Group:		Base
-Group(de):	Gründsätzlich
-Group(es):	Base
-Group(pl):	Podstawowe
-Group(pt_BR):	Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
