@@ -22,6 +22,8 @@ Patch6:		%{name}-altconfigfile.patch
 # http://tzukanov.narod.ru/grub-jfs_xfs
 Patch7:		%{name}-jfs+xfs-1.0-core.patch
 Patch8:		%{name}-jfs+xfs-1.0-build.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
 Provides:	bootloader
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -78,7 +80,11 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 rm -rf doc/*info*
 
 %build
-%configure2_13
+rm -f missing
+aclocal
+autoconf
+automake -a -c
+%configure
 %{__make}
 
 %install
