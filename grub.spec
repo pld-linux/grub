@@ -4,6 +4,7 @@ Version:	0.5.94
 Release:	1
 License:	GPL
 Group:		Base
+Group(pl):	Podstawowe
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	install_grub_on_floppy
 Patch0:		grub-config.patch
