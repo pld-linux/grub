@@ -4,7 +4,7 @@ Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.5.96.1
-Release:	3
+Release:	4
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
@@ -14,6 +14,7 @@ Source1:	install_%{name}_on_floppy
 Source2:	%{name}-linux-menu.lst
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-info.patch
+Patch2:		%{name}-sh.patch
 Provides:	bootloader
 ExcludeArch:	sparc sparc64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -59,6 +60,7 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %setup -q
 %patch0 -p1
 %patch1 -p1 -b .wiget
+%patch2 -p1
 
 rm -rf doc/*info*
 
