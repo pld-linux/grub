@@ -2,6 +2,8 @@
 # TODO:
 # - check VGA patch - doesn't work good, 0.92 works fine
 #
+%bcond_with	splashimage	# removes some ethernet cards
+
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
@@ -118,9 +120,9 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 %patch1 -p0
 %patch2 -p1
 %patch3 -p1
-#%patch4 -p1
-#%patch5 -p1
-#%patch6 -p1
+%{?with_splashimage:%patch4 -p1}
+%{?with_splashimage:%patch5 -p1}
+%{?with_splashimage:%patch6 -p1}
 %patch7 -p1
 #%patch8 -p1
 #%patch9 -p1
@@ -138,6 +140,7 @@ rm -rf doc/*info*
 %{__automake}
 CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 %configure \
+%if %{without splashimage}
 	--enable-3c503 \
 	--enable-3c507 \
 	--enable-3c509 \
@@ -170,6 +173,7 @@ CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 	--enable-via-rhine \
 	--enable-w89c840 \
 	--enable-wd \
+%endif
 	--disable-auto-linux-mem-opt
 # if you want to enable following cards for pxeboot comment out patches 8 & 9
 # and comment out --enable-e1000 & --enable-tg3 cards:
@@ -214,6 +218,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 /etc/sysconfig/rc-boot/%{name}_functions.sh
 
+%if %{without splashimage}
 %files nb
 %defattr(644,root,root,755)
 %{_datadir}/grub/nbgrub
@@ -221,3 +226,4 @@ rm -rf $RPM_BUILD_ROOT
 %files pxe
 %defattr(644,root,root,755)
 %{_datadir}/grub/pxegrub
+%endif
