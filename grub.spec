@@ -83,8 +83,8 @@ rm -rf doc/*info*
 
 %build
 %{__libtoolize}
-aclocal
-autoheader
+%{__aclocal}
+%{__autoheader}
 %{__autoconf}
 %{__automake}
 %configure
