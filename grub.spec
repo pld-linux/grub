@@ -9,6 +9,7 @@
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
+Summary(de):	GRand Unified Bootloader
 Name:		grub
 Version:	0.96
 Release:	1
@@ -54,6 +55,16 @@ operating systems. In addition to loading the Linux and *BSD kernels,
 it implements the Multiboot standard, which allows for flexible
 loading of multiple boot images (needed for modular kernels such as
 the GNU Hurd).
+
+%description -l de
+GRUB (GRand Unified Boot-loader) ist ein Bootloader, der oft auf
+Rechnern eingesetzt wird, auf denen das freie Betriebssystem Linux
+läuft. GRUB löst den betagten LILO (Linux-Loader) ab.
+
+GRUB wurde innerhalb des GNU Hurd-Projektes als Boot-Loader entwickelt
+und wird unter der GPL vertrieben. Aufgrund seiner höheren
+Flexibilität verdrängt GRUB in vielen Linux-Distributionen den
+traditionellen Boot-Loader LILO.
 
 %description -l es
 Éste es GRUB - Grand Unified Boot Loader - un administrador de
@@ -213,7 +224,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/grub
 %{_libdir}/grub/*stage*
 %{_libdir}/grub/splash.xpm.gz
-%config(noreplace) %verify(not mtime md5 size) %{_libdir}/grub/menu.lst
+%config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
 %{_infodir}/*.info*
