@@ -21,6 +21,8 @@ Patch5:		%{name}-grub-install.patch
 Patch6:		%{name}-ezd.patch
 Patch7:		%{name}-init-config-end--prepatch.patch
 Patch8:		http://alpha.polynum.org/misc/grub-0.92_cd+ef.diff.gz
+Patch9:		%{name}-ac_fix.patch
+Patch10:	%{name}-am_fix.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -78,6 +80,8 @@ avançados e que querem mais recursos de seu boot loader.
 %patch6 -p1
 %patch7 -p1
 %{?_with_exp:%patch8 -p1}
+%patch9 -p1
+%patch10 -p1
 
 rm -rf doc/*info*
 
