@@ -1,6 +1,6 @@
 diff -rU3 grub-0.91-vanilla/ChangeLog grub-0.91/ChangeLog
 --- grub-0.91-vanilla/ChangeLog	Sat Jan 19 21:26:02 2002
-+++ grub-0.91/ChangeLog	Wed Apr  3 08:02:05 2002
++++ grub-0.91/ChangeLog	Wed Apr  3 12:39:35 2002
 @@ -1877,6 +1877,18 @@
  	[!STAGE1_5] (CMDLINE_WIDTH): New macro.
  	[!STAGE1_5] (CMDLINE_MARGIN): Likewise.
@@ -22,7 +22,7 @@ diff -rU3 grub-0.91-vanilla/ChangeLog grub-0.91/ChangeLog
  
 diff -rU3 grub-0.91-vanilla/configure.in grub-0.91/configure.in
 --- grub-0.91-vanilla/configure.in	Tue Jan 15 11:27:59 2002
-+++ grub-0.91/configure.in	Wed Apr  3 08:02:05 2002
++++ grub-0.91/configure.in	Wed Apr  3 12:39:35 2002
 @@ -18,6 +18,7 @@
  AC_PREREQ(2.13)
  
@@ -46,7 +46,7 @@ diff -rU3 grub-0.91-vanilla/configure.in grub-0.91/configure.in
  AC_OUTPUT([Makefile stage1/Makefile stage2/Makefile docs/Makefile \
 diff -rU3 grub-0.91-vanilla/docs/grub.texi grub-0.91/docs/grub.texi
 --- grub-0.91-vanilla/docs/grub.texi	Tue Jan 15 11:24:54 2002
-+++ grub-0.91/docs/grub.texi	Wed Apr  3 08:02:40 2002
++++ grub-0.91/docs/grub.texi	Wed Apr  3 12:39:35 2002
 @@ -1891,6 +1891,7 @@
  * rarp::                        Initialize a network device via RARP
  * serial::                      Set up a serial device
@@ -74,7 +74,7 @@ diff -rU3 grub-0.91-vanilla/docs/grub.texi grub-0.91/docs/grub.texi
  
 diff -rU3 grub-0.91-vanilla/stage2/asm.S grub-0.91/stage2/asm.S
 --- grub-0.91-vanilla/stage2/asm.S	Sat Dec 29 19:05:36 2001
-+++ grub-0.91/stage2/asm.S	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/asm.S	Wed Apr  3 12:39:35 2002
 @@ -1865,7 +1865,7 @@
   *                      %cl = cursor ending scanline
   */
@@ -368,7 +368,7 @@ diff -rU3 grub-0.91-vanilla/stage2/asm.S grub-0.91/stage2/asm.S
   * getrtsecs()
 diff -rU3 grub-0.91-vanilla/stage2/builtins.c grub-0.91/stage2/builtins.c
 --- grub-0.91-vanilla/stage2/builtins.c	Thu Jan  3 00:23:30 2002
-+++ grub-0.91/stage2/builtins.c	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/builtins.c	Wed Apr  3 12:39:35 2002
 @@ -133,6 +133,36 @@
    grub_printf ("[%d,%d,%d]", sector, offset, length);
  }
@@ -781,7 +781,7 @@ diff -rU3 grub-0.91-vanilla/stage2/builtins.c grub-0.91/stage2/builtins.c
  };
 diff -rU3 grub-0.91-vanilla/stage2/char_io.c grub-0.91/stage2/char_io.c
 --- grub-0.91-vanilla/stage2/char_io.c	Fri Jan 18 19:01:26 2002
-+++ grub-0.91/stage2/char_io.c	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/char_io.c	Wed Apr  3 12:39:35 2002
 @@ -262,8 +262,8 @@
  
    /* XXX: These should be defined in shared.h, but I leave these here,
@@ -975,7 +975,7 @@ diff -rU3 grub-0.91-vanilla/stage2/char_io.c grub-0.91/stage2/char_io.c
  }
 diff -rU3 grub-0.91-vanilla/stage2/cmdline.c grub-0.91/stage2/cmdline.c
 --- grub-0.91-vanilla/stage2/cmdline.c	Thu Jan  3 00:23:30 2002
-+++ grub-0.91/stage2/cmdline.c	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/cmdline.c	Wed Apr  3 12:39:35 2002
 @@ -125,7 +125,7 @@
    init_page ();
  #ifdef SUPPORT_DISKLESS
@@ -987,7 +987,7 @@ diff -rU3 grub-0.91-vanilla/stage2/cmdline.c grub-0.91/stage2/cmdline.c
  
 diff -rU3 grub-0.91-vanilla/stage2/disk_io.c grub-0.91/stage2/disk_io.c
 --- grub-0.91-vanilla/stage2/disk_io.c	Wed Nov 28 19:43:56 2001
-+++ grub-0.91/stage2/disk_io.c	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/disk_io.c	Wed Apr  3 12:39:35 2002
 @@ -1267,7 +1267,7 @@
  	}
  
@@ -1017,7 +1017,7 @@ diff -rU3 grub-0.91-vanilla/stage2/disk_io.c grub-0.91/stage2/disk_io.c
  	errnum = ERR_BAD_FILENAME;
 diff -rU3 grub-0.91-vanilla/stage2/shared.h grub-0.91/stage2/shared.h
 --- grub-0.91-vanilla/stage2/shared.h	Tue Jan  8 03:57:36 2002
-+++ grub-0.91/stage2/shared.h	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/shared.h	Wed Apr  3 12:39:35 2002
 @@ -44,6 +44,12 @@
  # define RAW_SEG(x) (x)
  #endif
@@ -1151,7 +1151,7 @@ diff -rU3 grub-0.91-vanilla/stage2/shared.h grub-0.91/stage2/shared.h
  int get_diskinfo (int drive, struct geometry *geometry);
 diff -rU3 grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
 --- grub-0.91-vanilla/stage2/stage2.c	Tue Jan  8 03:56:45 2002
-+++ grub-0.91/stage2/stage2.c	Wed Apr  3 08:02:05 2002
++++ grub-0.91/stage2/stage2.c	Wed Apr  3 12:40:21 2002
 @@ -19,7 +19,12 @@
  
  #include "shared.h"
@@ -1326,14 +1326,14 @@ diff -rU3 grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  	{
  	  first_entry++;
  	  entryno--;
-@@ -378,6 +384,7 @@
- 	      grub_timeout--;
- 	      
- 	      /* Print a message.  */
-+	      cls();
- 	      grub_printf ("\rPress `ESC' to enter the menu... %d   ",
- 			   grub_timeout);
- 	    }
+@@ -349,6 +355,7 @@
+   /* If SHOW_MENU is false, don't display the menu until ESC is pressed.  */
+   if (! show_menu)
+     {
++      cls();
+       /* Get current time.  */
+       while ((time1 = getrtsecs ()) == 0xFF)
+ 	;
 @@ -399,7 +406,7 @@
  #endif /* ! GRUB_UTIL */
  
