@@ -16,6 +16,7 @@ Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
+# Source4-md5:	2842e2955603e3b6d722690b3cdd48a9
 Patch0:		%{name}-install.in.patch
 Patch1:		%{name}-installcopyonly.patch
 Patch2:		%{name}-addsyncs.patch
