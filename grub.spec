@@ -1,4 +1,5 @@
 Summary:	GRand Unified Bootloader
+Summary(pl):	GRUB - bootloader dla x86
 Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
