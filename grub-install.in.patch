@@ -1,26 +1,18 @@
---- grub-0.90/util/grub-install.in~	Wed Feb 28 06:19:39 2001
-+++ grub-0.90/util/grub-install.in	Thu Jul 19 16:01:12 2001
-@@ -224,6 +224,15 @@
- test -d "$bootdir" || mkdir "$bootdir" || exit 1
- test -d "$grubdir" || mkdir "$grubdir" || exit 1
+--- grub-install.in.orig	2002-05-20 13:21:50.000000000 +0200
++++ grub-install.in	2003-09-05 21:20:35.000000000 +0200
+@@ -27,7 +27,7 @@
+ host_cpu=@host_cpu@
+ host_os=@host_os@
+ host_vendor=@host_vendor@
+-pkgdatadir=${datadir}/${PACKAGE}/${host_cpu}-${host_vendor}
++pkgdatadir=${datadir}/${PACKAGE}
  
-+# Copy the GRUB images to the GRUB directory.
-+for file in ${grubdir}/stage1 ${grubdir}/stage2 ${grubdir}/*stage1_5; do
-+    rm -f $file || exit 1
-+done
-+for file in \
-+    ${pkgdatadir}/stage1 ${pkgdatadir}/stage2 ${pkgdatadir}/*stage1_5; do
-+    cp -f $file ${grubdir} || exit 1
-+done
-+
- # If --recheck is specified, remove the device map, if present.
- if test $recheck = yes; then
-     rm -f $device_map
-@@ -297,15 +306,6 @@
- EOF
+ grub_shell=${sbindir}/grub
+ log_file=/tmp/grub-install.log.$$
+@@ -378,15 +378,6 @@
      exit 1
  fi
--
+ 
 -# Copy the GRUB images to the GRUB directory.
 -for file in ${grubdir}/stage1 ${grubdir}/stage2 ${grubdir}/*stage1_5; do
 -    rm -f $file || exit 1
@@ -29,6 +21,7 @@
 -    ${pkgdatadir}/stage1 ${pkgdatadir}/stage2 ${pkgdatadir}/*stage1_5; do
 -    cp -f $file ${grubdir} || exit 1
 -done
- 
- # Create a safe temporary file.
- test -x /bin/tempfile && log_file=`tempfile --prefix=grub`
+-
+ # Make sure that GRUB reads the same images as the host OS.
+ test -n "$mkimg" && img_file=`$mkimg`
+ test -n "$mklog" && log_file=`$mklog`
