@@ -10,12 +10,12 @@ Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
-Version:	0.95
-Release:	2
+Version:	0.96
+Release:	1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-# Source0-md5:	4ca8e4363d5f1980f2c63b7f5cdbe0d1
+# Source0-md5:	47c228c88f848873288ad1cd04cc93f0
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
@@ -46,7 +46,7 @@ ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
-%define		_datadir	/boot
+%define		_libdir		/boot
 
 %description
 GRUB is a GPLed bootloader intended to unify bootloading across x86
@@ -118,10 +118,10 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 
 %prep
 %setup -q
-%patch0 -p0
+%patch0 -p1
 %patch1 -p0
 %patch2 -p1
-%patch3 -p1
+#%%patch3 -p1
 %{?with_splashimage:%patch4 -p1}
 %{?with_splashimage:%patch5 -p1}
 %{?with_splashimage:%patch6 -p1}
@@ -190,13 +190,13 @@ install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
-	$RPM_BUILD_ROOT%{_datadir}/grub/
+mv -f $RPM_BUILD_ROOT%{_libdir}/grub/%{_arch}-*/* \
+	$RPM_BUILD_ROOT%{_libdir}/grub/
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/grub/menu.lst
+install %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
-install %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/grub/splash.xpm.gz
+install %{SOURCE4} $RPM_BUILD_ROOT%{_libdir}/grub/splash.xpm.gz
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -210,10 +210,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc TODO BUGS NEWS ChangeLog docs/menu.lst
-%dir %{_datadir}/grub
-%{_datadir}/grub/*stage*
-%{_datadir}/grub/splash.xpm.gz
-%config(noreplace) %verify(not mtime md5 size) %{_datadir}/grub/menu.lst
+%dir %{_libdir}/grub
+%{_libdir}/grub/*stage*
+%{_libdir}/grub/splash.xpm.gz
+%config(noreplace) %verify(not mtime md5 size) %{_libdir}/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
 %{_infodir}/*.info*
@@ -223,9 +223,9 @@ rm -rf $RPM_BUILD_ROOT
 %if %{without splashimage}
 %files nb
 %defattr(644,root,root,755)
-%{_datadir}/grub/nbgrub
+%{_libdir}/grub/nbgrub
 
 %files pxe
 %defattr(644,root,root,755)
-%{_datadir}/grub/pxegrub
+%{_libdir}/grub/pxegrub
 %endif

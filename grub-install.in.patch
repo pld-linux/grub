@@ -1,15 +1,16 @@
---- util/grub-install.in.orig	2002-05-20 13:21:50.000000000 +0200
-+++ util/grub-install.in	2003-09-05 21:20:35.000000000 +0200
+diff -ruN grub-0.96./util/grub-install.in grub-0.96/util/grub-install.in
+--- grub-0.96./util/grub-install.in	2005-02-01 22:18:17.000000000 +0100
++++ grub-0.96/util/grub-install.in	2005-02-01 22:18:52.579617408 +0100
 @@ -27,7 +27,7 @@
  host_cpu=@host_cpu@
  host_os=@host_os@
  host_vendor=@host_vendor@
--pkgdatadir=${datadir}/${PACKAGE}/${host_cpu}-${host_vendor}
-+pkgdatadir=${datadir}/${PACKAGE}
+-pkglibdir=${libdir}/${PACKAGE}/${host_cpu}-${host_vendor}
++pkglibdir=${libdir}/${PACKAGE}
  
  grub_shell=${sbindir}/grub
- log_file=/tmp/grub-install.log.$$
-@@ -378,15 +378,6 @@
+ grub_set_default=${sbindir}/grub-set-default
+@@ -406,15 +406,6 @@
      exit 1
  fi
  
@@ -18,10 +19,10 @@
 -    rm -f $file || exit 1
 -done
 -for file in \
--    ${pkgdatadir}/stage1 ${pkgdatadir}/stage2 ${pkgdatadir}/*stage1_5; do
+-    ${pkglibdir}/stage1 ${pkglibdir}/stage2 ${pkglibdir}/*stage1_5; do
 -    cp -f $file ${grubdir} || exit 1
 -done
 -
- # Make sure that GRUB reads the same images as the host OS.
- test -n "$mkimg" && img_file=`$mkimg`
- test -n "$mklog" && log_file=`$mklog`
+ # Make a default file.
+ ${grub_set_default} --root-directory=${rootdir} default
+ 
