@@ -7,7 +7,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.94
-Release:	2
+Release:	3
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -25,6 +25,8 @@ Patch4:		%{name}-graphics.patch
 Patch5:		%{name}-splashimagehelp.patch
 Patch6:		%{name}-graphics-bootterm.patch
 Patch7:		%{name}-special-device-names.patch
+Patch8:		%{name}-0.94-diskless-1.patch
+Patch9:		%{name}-0.94-diskless-fixtg3.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -117,6 +119,8 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 #%patch5 -p1
 #%patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
 
 rm -rf doc/*info*
 
@@ -139,6 +143,7 @@ CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 	--enable-davicom \
 	--enable-depca \
 	--enable-diskless \
+	--enable-e1000 \
 	--enable-eepro \
 	--enable-eepro100 \
 	--enable-epic100 \
@@ -150,18 +155,21 @@ CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 	--enable-ni5010 \
 	--enable-ni5210 \
 	--enable-ni6510 \
-	--enable-ns8390 \
-	--enable-otulip \
+	--enable-tulip \
 	--enable-rtl8139 \
-	--enable-sis900 \
 	--enable-sk-g16 \
 	--enable-smc9000 \
+	--enable-tg3 \
 	--enable-tiara \
-	--enable-tulip \
 	--enable-via-rhine \
 	--enable-w89c840 \
 	--enable-wd \
 	--disable-auto-linux-mem-opt
+# if you want to enable following cards for pxeboot comment out patches 8 & 9
+# and comment out --enable-e1000 & --enable-tg3 cards:
+#       --enable-ns8390 \
+#       --enable-sis900 \
+#       --enable-tulip \
 %{__make}
 
 %install
