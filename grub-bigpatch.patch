@@ -1,0 +1,585 @@
+diff -r -u -N grub-0.5.94.old/grub/asmstub.c grub-0.5.94/grub/asmstub.c
+--- grub-0.5.94.old/grub/asmstub.c	Tue Feb 29 02:56:52 2000
++++ grub-0.5.94/grub/asmstub.c	Sun Apr 16 15:13:02 2000
+@@ -793,7 +793,7 @@
+ 
+ /* returns packed BIOS/ASCII code */
+ int
+-getkey (void)
++raw_getkey (void)
+ {
+   int c;
+ 
+diff -r -u -N grub-0.5.94.old/stage2/asm.S grub-0.5.94/stage2/asm.S
+--- grub-0.5.94.old/stage2/asm.S	Mon Feb  7 06:14:46 2000
++++ grub-0.5.94/stage2/asm.S	Sun Apr 16 15:13:02 2000
+@@ -1992,7 +1992,7 @@
+  *			%al = ASCII character
+  */
+ 
+-ENTRY(getkey)
++ENTRY(raw_getkey)
+ 	push	%ebp
+ 	push	%ebx			/* save %ebx */
+ 
+diff -r -u -N grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
+--- grub-0.5.94.old/stage2/builtins.c	Tue Feb 29 22:47:48 2000
++++ grub-0.5.94/stage2/builtins.c	Sun Apr 16 15:13:02 2000
+@@ -52,6 +52,12 @@
+ int grub_timeout = -1;
+ /* The BIOS drive map.  */
+ static unsigned short bios_drive_map[DRIVE_MAP_SIZE + 1];
++char keytable_transl[256];
++char keytable_file[256] = { '\0' };
++static int keytable_load (int);
++char i18n_transl[512];
++char i18n_file[256] = { '\0' };
++static int i18n_load (int);
+ 
+ /* Initialize the data for builtins.  */
+ void
+@@ -75,6 +81,18 @@
+   grub_timeout = -1;
+ }
+ 
++void
++init_config_end (void)
++{
++  keytable_load(0);
++  i18n_load(0);
++}
++
++int getkey(void) {
++  int c = raw_getkey();
++  return keytable_transl[c & 0xff] + (c & 0xff00);
++}
++
+ /* Print which sector is read when loading a file.  */
+ static void
+ disk_read_print_func (int sector)
+@@ -1870,6 +1888,92 @@
+ };
+ 
+ 
++/* keytable */
++static int
++keytable_load (int verbose)
++{
++  int i;
++  for (i = 0; i < 256; i++) keytable_transl[i] = i;
++
++  if (keytable_file[0]) {
++      int len;
++
++      if (! grub_open (keytable_file))
++	return 1;
++
++      len = grub_read (keytable_transl, 256);
++
++      grub_close ();
++      if (len != 256) return 1;
++
++      if (verbose) printf("    [keytable loaded]\n");
++  }
++  return 0;
++} 
++
++static int
++keytable_func (char *arg, int flags)
++{
++  strcpy(keytable_file, arg);
++  if (flags & BUILTIN_CMDLINE) return keytable_load(1);
++  return 0;
++}
++
++static struct builtin builtin_keytable =
++{
++  "keytable",
++  keytable_func,
++  BUILTIN_CMDLINE | BUILTIN_MENU,
++  "keytable FILE",
++  "Change the keyboard map. The file is a translation table."
++  "For example, for azerty (french) keyboard, at offset 'q' you find 'a'"
++};
++
++
++/* i18n */
++static int
++i18n_load (int verbose)
++{
++  int len, i;
++  char *p;
++
++  if (! grub_open (i18n_file))
++    return 1;
++
++  len = grub_read (i18n_transl, 512);
++
++  grub_close ();
++  if (len == 512) return 1;
++
++  for (i = 0, p = i18n_transl; *p; p++, i++) {
++    msgs[i] = p;
++    while (*p && *p != '\n') p++;	
++    *p = 0;
++  }
++
++  if (verbose) printf("    [keytable loaded]\n");
++
++  return 0;
++}
++
++static int
++i18n_func (char *arg, int flags)
++{
++  strcpy(i18n_file, arg);
++  if (flags & BUILTIN_CMDLINE) return i18n_load(1);
++  return 0;
++}
++
++static struct builtin builtin_i18n =
++{
++  "i18n",
++  i18n_func,
++  BUILTIN_CMDLINE | BUILTIN_MENU,
++  "i18n FILE",
++  "The file must contain the different messages tranlated"
++};
++
++
+ /* makeactive */
+ static int
+ makeactive_func (char *arg, int flags)
+@@ -2948,11 +3053,13 @@
+   &builtin_geometry,
+   &builtin_help,
+   &builtin_hide,
++  &builtin_i18n,
+   &builtin_impsprobe,
+   &builtin_initrd,
+   &builtin_install,
+   &builtin_ioprobe,
+   &builtin_kernel,
++  &builtin_keytable,
+   &builtin_makeactive,
+   &builtin_map,
+   &builtin_module,
+diff -r -u -N grub-0.5.94.old/stage2/char_io.c grub-0.5.94/stage2/char_io.c
+--- grub-0.5.94.old/stage2/char_io.c	Fri Feb 18 05:34:42 2000
++++ grub-0.5.94/stage2/char_io.c	Sun Apr 16 15:13:02 2000
+@@ -120,6 +120,15 @@
+ }
+ 
+ #ifndef STAGE1_5
++void
++grub_printf_centered_ (const char *format)
++{
++  int len = (80 - strlen(format)) / 2;
++  while (len--) putchar(' ');
++}
++#endif
++
++#ifndef STAGE1_5
+ int
+ grub_sprintf (char *buffer, const char *format, ...)
+ {
+@@ -897,4 +906,5 @@
+   grub_memmove (dest, src, grub_strlen (src) + 1);
+   return dest;
+ }
++
+ #endif /* ! STAGE1_5 */
+diff -r -u -N grub-0.5.94.old/stage2/shared.h grub-0.5.94/stage2/shared.h
+--- grub-0.5.94.old/stage2/shared.h	Tue Feb 22 08:25:17 2000
++++ grub-0.5.94/stage2/shared.h	Sun Apr 16 15:13:02 2000
+@@ -554,6 +554,7 @@
+ void track_int13 (int drive);
+ 
+ /* The key map.  */
++extern char keytable_transl[];
+ extern unsigned short bios_key_map[];
+ extern unsigned short ascii_key_map[];
+ extern unsigned short io_map[];
+@@ -619,6 +620,7 @@
+ 
+ /* Wait for a keypress, and return its packed BIOS/ASCII key code.
+    Use ASCII_CHAR(ret) to extract the ASCII code. */
++int raw_getkey (void);
+ int getkey (void);
+ 
+ /* Like GETKEY, but doesn't block, and returns -1 if no keystroke is
+@@ -676,9 +678,11 @@
+ 
+ extern kernel_t kernel_type;
+ extern int grub_timeout;
++extern char *msgs[];
+ 
+ void init_builtins (void);
+ void init_config (void);
++void init_config_end (void);
+ char *skip_to (int after_equal, char *cmdline);
+ struct builtin *find_command (char *command);
+ void print_cmdline_message (int forever);
+@@ -688,6 +692,8 @@
+ 
+ /* C library replacement functions with identical semantics. */
+ void grub_printf (const char *format,...);
++void grub_printf_centered_();
++#define grub_printf_centered(format...) do { grub_printf_centered_(format); grub_printf(format); } while (0);
+ int grub_sprintf (char *buffer, const char *format, ...);
+ int grub_tolower (int c);
+ int grub_isspace (int c);
+diff -r -u -N grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
+--- grub-0.5.94.old/stage2/stage2.c	Wed Jan  5 07:02:22 2000
++++ grub-0.5.94/stage2/stage2.c	Sun Apr 16 15:16:41 2000
+@@ -19,8 +19,24 @@
+ 
+ #include "shared.h"
+ 
++#define WIDTH 80
++#define HEIGHT 25
++
++int menu_x_border = 30;
++int menu_y_border = 6;
++int menu_width = 20;
++int menu_height = 8;
++
+ grub_jmp_buf restart_env;
+ 
++char *msgs[] = {
++  "Welcome to GRUB the operating system chooser!",
++  "Use the %c and %c keys for selecting which entry is highlighted.",
++  "Press enter to boot the selected OS, \'e\' to edit the",
++  "commands before booting, or \'c\' for a command-line.",
++  "The highlighted entry will be booted automatically in %d seconds.",
++};
++
+ static char *
+ get_entry (char *list, int num, int nested)
+ {
+@@ -40,11 +56,11 @@
+ 
+ 
+ static void
+-print_entries (int y, int size, int first, char *menu_entries)
++print_entries (int first, char *menu_entries)
+ {
+   int i;
+ 
+-  gotoxy (77, y + 1);
++  gotoxy (menu_x_border + menu_width + 3, menu_y_border + 1);
+ 
+   if (first)
+     putchar (DISP_UP);
+@@ -53,15 +69,15 @@
+ 
+   menu_entries = get_entry (menu_entries, first, 0);
+ 
+-  for (i = 1; i <= size; i++)
++  for (i = 0; i < menu_height; i++)
+     {
+       int j = 0;
+ 
+-      gotoxy (3, y + i);
++      gotoxy (menu_x_border + 1, menu_y_border + 1 + i);
+ 
+       while (*menu_entries)
+ 	{
+-	  if (j < 71)
++	  if (j < menu_width)
+ 	    {
+ 	      putchar (*menu_entries);
+ 	      j++;
+@@ -73,11 +89,11 @@
+       if (*(menu_entries - 1))
+ 	menu_entries++;
+ 
+-      for (; j < 71; j++)
++      for (; j < menu_width; j++)
+ 	putchar (' ');
+     }
+ 
+-  gotoxy (77, y + size);
++  gotoxy (menu_x_border + menu_width + 3, menu_y_border + menu_height);
+ 
+   if (*menu_entries)
+     putchar (DISP_DOWN);
+@@ -85,64 +101,61 @@
+     putchar (' ');
+ }
+ 
+-
+ static void
+-print_border (int y, int size)
++print_box(int x, int y, int width, int height)
+ {
+   int i;
+ 
+-#ifndef GRUB_UTIL
+-  /* Color the menu. The menu is 75 * 14 characters.  */
+-  for (i = 0; i < 14; i++)
+-    {
+-      int j;
+-      for (j = 0; j < 75; j++)
+-	{
+-	  gotoxy (j + 1, i + y);
+-	  set_attrib (normal_color);
+-	}
+-    }
+-#endif
+-
+-  gotoxy (1, y);
+-
++  gotoxy (x, y);
+   putchar (DISP_UL);
+-  for (i = 0; i < 73; i++)
+-    putchar (DISP_HORIZ);
++
++  for (i = 0; i < width - 2; i++) putchar (DISP_HORIZ);
+   putchar (DISP_UR);
+ 
+   i = 1;
+ 
+   while (1)
+     {
+-      gotoxy (1, y + i);
++      gotoxy (x, y + i);
+ 
+-      if (i > size)
++      if (i >= height - 1)
+ 	break;
+ 
+       putchar (DISP_VERT);
+-      gotoxy (75, y + i);
++      gotoxy (x + width - 1, y + i);
+       putchar (DISP_VERT);
+ 
+       i++;
+     }
+ 
+   putchar (DISP_LL);
+-  for (i = 0; i < 73; i++)
+-    putchar (DISP_HORIZ);
++  for (i = 0; i < width - 2; i++) putchar (DISP_HORIZ);
+   putchar (DISP_LR);
+ }
+ 
+ static void
+-set_line (int y, int attr)
++color_box(int x, int y, int width, int height, int color)
+ {
+-  int x;
++  int i, j;
++  for (i = 0; i < height; i++)
++    for (j = 0; j < width; j++)
++      {
++	gotoxy (x + j, y + i);
++	set_attrib (color);
++      }
++}
+ 
+-  for (x = 2; x < 75; x++)
+-    {
+-      gotoxy (x, y);
+-      set_attrib (attr);
+-    }
++static void
++color_bordered_box(int x, int y, int width, int height, int color)
++{
++  color_box(x, y, width, height, color);
++  print_box(x, y, width, height);
++}
++
++static void
++set_line (int y, int attr)
++{
++  color_box(menu_x_border + 1, y, menu_width, 1, attr);
+ }
+ 
+ /* Set the attribute of the line Y to normal state.  */
+@@ -179,27 +192,31 @@
+    */
+ 
+ restart:
+-  while (entryno > 11)
++  while (entryno > menu_height)
+     {
+       first_entry++;
+       entryno--;
+     }
+ 
+-  init_page ();
++  cls();
+ #ifndef GRUB_UTIL
+   nocursor ();
+ #endif
+ 
+-  print_border (3, 12);
++  color_bordered_box(4, 2, 72, 15, 0x10);
++  color_box         (5, 3, 70, 13, 0x1F);
++  gotoxy(8, 4);
++  grub_printf(msgs[0]);
+ 
++  color_box(menu_x_border, menu_y_border + 1, menu_width + 2, menu_height, normal_color);
++
++  grub_printf ("\n\n\n\n");
+ #ifdef GRUB_UTIL
+-  grub_printf ("\n
+-      Use the up and down arrows for selecting which entry is highlighted.\n");
++  grub_printf ("Use the up and down arrows for selecting which entry is highlighted.\n");
+ #else
+-  grub_printf ("\n
+-      Use the %c and %c keys for selecting which entry is highlighted.\n",
+-	  DISP_UP, DISP_DOWN);
++  grub_printf_centered(msgs[1], DISP_UP, DISP_DOWN);
+ #endif
++  printf("\n");
+ 
+   if (password)
+     {
+@@ -208,10 +225,10 @@
+     }
+   else
+     {
+-      if (config_entries)
+-	printf ("       Press enter to boot the selected OS, \'e\' to edit the
+-        commands before booting, or \'c\' for a command-line.");
+-      else
++      if (config_entries) {
++	grub_printf_centered(msgs[2]); printf("\n");
++	grub_printf_centered(msgs[3]);
++      } else
+ 	printf (
+ "      Press \'b\' to boot, \'e\' to edit the selected command in the
+       boot sequence, \'c\' for a command-line, \'o\' to open a new line
+@@ -219,10 +236,10 @@
+       selected line, or escape to go back to the main menu.");
+     }
+ 
+-  print_entries (3, 12, first_entry, menu_entries);
++  print_entries (first_entry, menu_entries);
+ 
+   /* highlight initial line */
+-  set_line_highlight (4 + entryno);
++  set_line_highlight (menu_y_border + 1 + entryno);
+ 
+   /* XX using RT clock now, need to initialize value */
+   while ((time1 = getrtsecs()) == 0xFF);
+@@ -242,9 +259,10 @@
+ 
+ 	  /* else not booting yet! */
+ 	  time2  = time1;
+-	  gotoxy (3, 22);
+-	  printf ("The highlighted entry will be booted automatically in %d seconds.    ", grub_timeout);
+-	  gotoxy (74, 4 + entryno);
++	  gotoxy (3, HEIGHT - 1);
++	  printf (msgs[4], grub_timeout);
++	  printf ("       ");
++	  gotoxy (menu_x_border + menu_width, menu_y_border + 1 + entryno);
+ 	  grub_timeout--;
+ 	}
+ 
+@@ -254,42 +272,42 @@
+ 
+ 	  if (grub_timeout >= 0)
+ 	    {
+-	      gotoxy (3, 22);
++	      gotoxy (3, HEIGHT - 1);
+ 	      printf ("                                                                    ");
+ 	      grub_timeout = -1;
+ 	      fallback_entry = -1;
+-	      gotoxy (74, 4 + entryno);
++	      gotoxy (menu_x_border + menu_width, menu_y_border + 1 + entryno);
+ 	    }
+ 
+ 	  if ((c == KEY_UP) || (ASCII_CHAR (c) == 16))
+ 	    {
+ 	      if (entryno > 0)
+ 		{
+-		  set_line_normal (4 + entryno);
++		  set_line_normal (menu_y_border + 1 + entryno);
+ 		  entryno--;
+-		  set_line_highlight (4 + entryno);
++		  set_line_highlight (menu_y_border + 1 + entryno);
+ 		}
+ 	      else if (first_entry > 0)
+ 		{
+ 		  first_entry--;
+-		  print_entries (3, 12, first_entry, menu_entries);
+-		  set_line_highlight (4);
++		  print_entries (first_entry, menu_entries);
++		  set_line_highlight (menu_y_border + 1);
+ 		}
+ 	    }
+ 	  if (((c == KEY_DOWN) || (ASCII_CHAR (c) == 14))
+ 	      && (first_entry + entryno + 1) < num_entries)
+ 	    {
+-	      if (entryno < 11)
++	      if (entryno < menu_height - 1)
+ 		{
+-		  set_line_normal (4 + entryno);
++		  set_line_normal (menu_y_border + 1 + entryno);
+ 		  entryno++;
+-		  set_line_highlight (4 + entryno);
++		  set_line_highlight (menu_y_border + 1 + entryno);
+ 		}
+-	      else if (num_entries > 12 + first_entry)
++	      else if (num_entries > menu_height + first_entry)
+ 		{
+ 		  first_entry++;
+-		  print_entries (3, 12, first_entry, menu_entries);
+-		  set_line_highlight (15);
++		  print_entries (first_entry, menu_entries);
++		  set_line_highlight (menu_y_border + 1 + entryno);
+ 		}
+ 	    }
+ 
+@@ -304,7 +322,7 @@
+ 	    {
+ 	      if ((c == 'd') || (c == 'o') || (c == 'O'))
+ 		{
+-		  set_line_normal (4 + entryno);
++		  set_line_normal (menu_y_border + 1 + entryno);
+ 
+ 		  /* insert after is almost exactly like insert before */
+ 		  if (c == 'o')
+@@ -342,12 +360,12 @@
+ 
+ 		      if (entryno >= num_entries)
+ 			entryno--;
+-		      if (first_entry && num_entries < 12 + first_entry)
++		      if (first_entry && num_entries < menu_height + first_entry)
+ 			first_entry--;
+ 		    }
+ 
+-		  print_entries (3, 12, first_entry, menu_entries);
+-		  set_line_highlight (4 + entryno);
++		  print_entries (first_entry, menu_entries);
++		  set_line_highlight (menu_y_border + 1 + entryno);
+ 		}
+ 
+ 	      cur_entry = menu_entries;
+@@ -428,8 +446,12 @@
+ 		     but it doesn't hurt to do it always */
+ 		  *(new_heap++) = 0;
+ 
+-		  if (config_entries)
+-		    run_menu (heap, NULL, num_entries, new_heap, 0);
++		  if (config_entries) 
++		    {
++		      menu_x_border = 10;
++		      menu_width = 60;		      
++		      run_menu (heap, NULL, num_entries, new_heap, 0);
++		    }
+ 		  else
+ 		    {
+ 		      cls ();
+@@ -695,6 +717,8 @@
+ 
+ 	  grub_close ();
+ 	}
++
++      init_config_end ();
+ 
+       if (! num_entries)
+ 	{
