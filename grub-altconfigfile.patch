@@ -119,7 +119,7 @@ diff -u -r grub-0.5.94.old/stage2/stage2.c grub-0.5.94/stage2/stage2.c
 +	  char *cmdline;
 +
 +	  cmdline = (char *) CMDLINE_BUF;
-+	  while (get_line_from_config (cmdline, NEW_HEAPSIZE))
++	  while (get_line_from_config (cmdline, NEW_HEAPSIZE, !is_preset))
 +	    {
 +	      struct builtin *builtin;
 +
