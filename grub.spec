@@ -3,7 +3,7 @@ Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.5.96.1
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
@@ -56,7 +56,7 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+%patch1 -p1 -b .wiget
 
 rm -rf doc/*info*
 
