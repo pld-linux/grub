@@ -1,3 +1,4 @@
+# _with_exp	- with experimental (incomatible) features
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
@@ -11,7 +12,6 @@ Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
-Source5:	%{name}.config
 Patch0:		%{name}-bootonce.patch
 Patch1:		%{name}-pwd.patch
 Patch2:		%{name}-vga16.patch
@@ -20,8 +20,10 @@ Patch4:		%{name}-info.patch
 Patch5:		%{name}-grub-install.patch
 Patch6:		%{name}-ezd.patch
 Patch7:		%{name}-init-config-end--prepatch.patch
+Patch8:		http://alpha.polynum.org/misc/grub-0.92_cd+ef.diff.gz
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	libtool
 Provides:	bootloader
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -73,12 +75,14 @@ avançados e que querem mais recursos de seu boot loader.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%{?_with_exp:%patch8 -p1}
 
 rm -rf doc/*info*
 
 %build
-rm -f missing
+libtoolize --copy --force
 aclocal
+autoheader
 autoconf
 automake -a -c -f
 %configure
