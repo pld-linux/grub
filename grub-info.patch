@@ -1,7 +1,6 @@
-diff -Nru grub-0.5.94/docs/appendices.texi grub-0.5.94.new/docs/appendices.texi
---- grub-0.5.94/docs/appendices.texi	Mon Feb 21 09:56:10 2000
-+++ grub-0.5.94.new/docs/appendices.texi	Thu Mar 23 18:00:20 2000
-@@ -182,7 +182,7 @@
+--- grub-0.5.96.1/docs/appendices.texi.wiget	Mon Oct 16 16:41:23 2000
++++ grub-0.5.96.1/docs/appendices.texi	Thu Jan 18 15:30:59 2001
+@@ -232,7 +232,7 @@
  @end example
  
  This will install the grub shell @file{grub} (@pxref{Invoking the grub
@@ -10,12 +9,11 @@ diff -Nru grub-0.5.94/docs/appendices.texi grub-0.5.94.new/docs/appendices.texi
  and the GRUB images It will also install the GRUB manual.
  
  Also, the latest version is available from the CVS. The repository is:
-diff -Nru grub-0.5.94/docs/grub.texi grub-0.5.94.new/docs/grub.texi
---- grub-0.5.94/docs/grub.texi	Thu Mar 23 18:01:23 2000
-+++ grub-0.5.94.new/docs/grub.texi	Thu Mar 23 17:43:11 2000
-@@ -14,11 +14,12 @@
- @syncodeindex pg cp
- @syncodeindex tp cp
+--- grub-0.5.96.1/docs/grub.texi.wiget	Mon Oct 16 16:53:38 2000
++++ grub-0.5.96.1/docs/grub.texi	Thu Jan 18 15:30:59 2001
+@@ -18,11 +18,12 @@
+ @paragraphindent 3
+ @finalout
  
 -@dircategory Kernel
 +@dircategory Miscellaneous:
@@ -30,8 +28,8 @@ diff -Nru grub-0.5.94/docs/grub.texi grub-0.5.94.new/docs/grub.texi
  @end direntry
  
  @setchapternewpage off
-@@ -103,8 +104,8 @@
- * Command::                     The list of available builtin commands
+@@ -112,8 +113,8 @@
+ * Commands::                    The list of available builtin commands
  * Troubleshooting::             Error messages produced by GRUB
  * Invoking the grub shell::     How to use the grub shell
 -* Invoking grub-install::       How to use the GRUB installer
@@ -41,9 +39,8 @@ diff -Nru grub-0.5.94/docs/grub.texi grub-0.5.94.new/docs/grub.texi
  
  Part III: The Programmer Reference Manual
  
-diff -Nru grub-0.5.94/docs/multiboot.texi grub-0.5.94.new/docs/multiboot.texi
---- grub-0.5.94/docs/multiboot.texi	Thu Mar 23 18:01:23 2000
-+++ grub-0.5.94.new/docs/multiboot.texi	Thu Mar 23 17:43:11 2000
+--- grub-0.5.96.1/docs/multiboot.texi.wiget	Thu Oct 19 17:15:33 2000
++++ grub-0.5.96.1/docs/multiboot.texi	Thu Jan 18 15:30:59 2001
 @@ -7,9 +7,9 @@
  @syncodeindex pg cp
  @syncodeindex tp cp
@@ -56,10 +53,9 @@ diff -Nru grub-0.5.94/docs/multiboot.texi grub-0.5.94.new/docs/multiboot.texi
  @end direntry
  
  @ifinfo
-diff -Nru grub-0.5.94/docs/user-ref.texi grub-0.5.94.new/docs/user-ref.texi
---- grub-0.5.94/docs/user-ref.texi	Thu Mar 23 18:01:23 2000
-+++ grub-0.5.94.new/docs/user-ref.texi	Thu Mar 23 17:52:45 2000
-@@ -1408,8 +1408,8 @@
+--- grub-0.5.96.1/docs/user-ref.texi.wiget	Mon Oct 16 16:41:46 2000
++++ grub-0.5.96.1/docs/user-ref.texi	Thu Jan 18 15:30:59 2001
+@@ -1602,8 +1602,8 @@
  just a comment if the first character is @samp{#}.
  
  
@@ -70,7 +66,7 @@ diff -Nru grub-0.5.94/docs/user-ref.texi grub-0.5.94.new/docs/user-ref.texi
  
  The program @command{grub-install} installs GRUB on your drive by the
  grub shell (@pxref{Invoking the grub shell}). You must specify the
-@@ -1451,8 +1451,8 @@
+@@ -1649,8 +1649,8 @@
  @end table
  
  
@@ -81,3 +77,14 @@ diff -Nru grub-0.5.94/docs/user-ref.texi grub-0.5.94.new/docs/user-ref.texi
  
  The program @command{mbchk} checks for the format of a Multiboot
  kernel. We recommend using this program before booting your own kernel
+--- grub-0.5.96.1/docs/tutorial.texi.wiget	Mon Oct 16 16:56:23 2000
++++ grub-0.5.96.1/docs/tutorial.texi	Thu Jan 18 15:31:54 2001
+@@ -134,7 +134,7 @@
+ 
+ To use GRUB, you need to install it on your drive. There are two ways of
+ doing that - either using the utility @command{grub-install}
+-(@pxref{Invoking grub-install}) on a UNIX-like OS, or by using the
++(@pxref{grub-install}) on a UNIX-like OS, or by using the
+ native Stage 2. These are quite similar, however, the utility might
+ probe a wrong BIOS drive, so better be careful.
+ 
