@@ -7,7 +7,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.93
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -30,6 +30,7 @@ Patch9:		%{name}-splashimagehelp.patch
 Patch10:	%{name}-graphics-bootterm.patch
 Patch11:	%{name}-serial-terminfo.patch
 Patch12:	%{name}-special-device-names.patch
+Patch13:	%{name}-gcc33.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -81,7 +82,7 @@ avançados e que querem mais recursos de seu boot loader.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%%patch2 -p1
 %patch3 -p1
 %patch4 -p0
 %patch5 -p0
@@ -92,6 +93,7 @@ avançados e que querem mais recursos de seu boot loader.
 %patch10 -p1
 %patch11 -p0
 %patch12 -p1
+%patch13 -p1
 
 rm -rf doc/*info*
 
