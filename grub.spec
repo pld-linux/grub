@@ -1,7 +1,7 @@
 Summary:	GRand Unified Bootloader
 Name:		grub
 Version:	0.5.94
-Release:	2
+Release:	3
 License:	GPL
 Group:		Base
 Group(pl):	Podstawowe
@@ -70,7 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir /boot/grub
 %config(noreplace) %verify(not mtime md5 size) /boot/grub/menu.lst
 /boot/grub/*stage*
-%{_infodir}/*.info.gz
+%{_infodir}/*.info*.gz
 %{_mandir}/*/*
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
