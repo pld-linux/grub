@@ -49,7 +49,7 @@ perl -p -i -e 's|VERSION|%{version}|' $RPM_BUILD_ROOT%{_sbindir}/$(basename %{SO
 # dangerous ?
 install -d $RPM_BUILD_ROOT/boot/grub/
 mv $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* $RPM_BUILD_ROOT/boot/grub/
-install -m600 %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
+install %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
 
 gzip -9nf $RPM_BUILD_ROOT{%{_infodir}/*,%{_mandir}/*/*} \
 	TODO BUGS NEWS ChangeLog docs/menu.lst
