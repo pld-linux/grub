@@ -18,8 +18,7 @@ Patch2:		%{name}-grub-install.patch
 Patch3:		%{name}-dont-give-mem-to-kernel.patch
 Patch4:		%{name}-ezd.patch
 Patch5:		%{name}-init-config-end--prepatch.patch
-Patch6:		%{name}-i18n-messages-and-keytable.patch
-Patch7:		%{name}-altconfigfile.patch
+Patch6:		%{name}-altconfigfile.patch
 Provides:	bootloader
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -70,7 +69,6 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 rm -rf doc/*info*
 
@@ -103,7 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc *.gz docs/menu.lst.gz
-%dir %{_datadir}
+%dir %{_datadir}/grub
 %{_datadir}/grub/*stage*
 %config(noreplace) %verify(not mtime md5 size) /boot/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
