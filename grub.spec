@@ -7,10 +7,13 @@ Group:		Base
 Group(pl):	Podstawowe
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	install_grub_on_floppy
+Source2:	grub-linux-menu.lst
 Patch0:		grub-config.patch
 Patch1:		grub-info.patch
 Prereq:		%{_sbindir}/fix-info-dir
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_sbindir	/sbin
 
 %description
 GRUB is a GPLed bootloader intended to unify bootloading across x86
@@ -47,6 +50,7 @@ perl -p -i -e 's|VERSION|%{version}|' $RPM_BUILD_ROOT%{_sbindir}/$(basename %{SO
 # dangerous ?
 install -d $RPM_BUILD_ROOT/boot/grub/
 mv $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* $RPM_BUILD_ROOT/boot/grub/
+install -m600 %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
 
 gzip -9nf $RPM_BUILD_ROOT{%{_infodir}/*,%{_mandir}/*/*} \
 	TODO BUGS NEWS ChangeLog docs/menu.lst
@@ -55,16 +59,18 @@ gzip -9nf $RPM_BUILD_ROOT{%{_infodir}/*,%{_mandir}/*/*} \
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%{_sbindir}/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %preun
-%{_sbindir}/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %files
 %defattr(644,root,root,755)
 %doc *.gz docs/menu.lst.gz
 %dir /boot/grub
-%attr(754,root,root) /boot/grub/*
-%{_infodir}/*
+%config(noreplace) %verify(not mtime md5 size) /boot/grub/menu.lst
+/boot/grub/*stage*
+%{_infodir}/*.info.gz
 %{_mandir}/*/*
+%attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
