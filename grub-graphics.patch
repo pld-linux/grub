@@ -1,51 +1,6 @@
---- grub-0.93/stage2/Makefile.am.graphics	2002-12-28 23:37:03.000000000 -0500
-+++ grub-0.93/stage2/Makefile.am	2002-12-28 23:37:03.000000000 -0500
-@@ -7,7 +7,7 @@
-         fat.h filesys.h freebsd.h fs.h hercules.h i386-elf.h \
- 	imgact_aout.h jfs.h mb_header.h mb_info.h md5.h nbi.h \
- 	pc_slice.h serial.h shared.h smp-imps.h term.h terminfo.h \
--	tparm.h nbi.h vstafs.h xfs.h
-+	tparm.h nbi.h vstafs.h xfs.h graphics.h
- EXTRA_DIST = setjmp.S apm.S $(noinst_SCRIPTS)
- 
- # For <stage1.h>.
-@@ -18,7 +18,7 @@
- libgrub_a_SOURCES = boot.c builtins.c char_io.c cmdline.c common.c \
- 	disk_io.c fsys_ext2fs.c fsys_fat.c fsys_ffs.c fsys_jfs.c \
- 	fsys_minix.c fsys_reiserfs.c fsys_vstafs.c fsys_xfs.c gunzip.c \
--	md5.c serial.c stage2.c terminfo.c tparm.c
-+	md5.c serial.c stage2.c terminfo.c tparm.c graphics.c
- libgrub_a_CFLAGS = $(GRUB_CFLAGS) -I$(top_srcdir)/lib \
- 	-DGRUB_UTIL=1 -DFSYS_EXT2FS=1 -DFSYS_FAT=1 -DFSYS_FFS=1 \
- 	-DFSYS_JFS=1 -DFSYS_MINIX=1 -DFSYS_REISERFS=1 -DFSYS_VSTAFS=1 \
-@@ -75,8 +75,14 @@
- HERCULES_FLAGS =
- endif
- 
-+if GRAPHICS_SUPPORT
-+GRAPHICS_FLAGS = -DSUPPORT_GRAPHICS=1
-+else
-+GRAPHICS_FLAGS =
-+endif
-+
- STAGE2_COMPILE = $(STAGE2_CFLAGS) -fno-builtin -nostdinc \
--	$(NETBOOT_FLAGS) $(SERIAL_FLAGS) $(HERCULES_FLAGS)
-+	$(NETBOOT_FLAGS) $(SERIAL_FLAGS) $(HERCULES_FLAGS) $(GRAPHICS_FLAGS)
- 
- STAGE1_5_LINK = -nostdlib -Wl,-N -Wl,-Ttext -Wl,2000
- STAGE1_5_COMPILE = $(STAGE2_COMPILE) -DNO_DECOMPRESSION=1 -DSTAGE1_5=1
-@@ -86,7 +92,7 @@
- 	cmdline.c common.c console.c disk_io.c fsys_ext2fs.c \
- 	fsys_fat.c fsys_ffs.c fsys_jfs.c fsys_minix.c fsys_reiserfs.c \
- 	fsys_vstafs.c fsys_xfs.c gunzip.c hercules.c md5.c serial.c \
--	smp-imps.c stage2.c terminfo.c tparm.c
-+	smp-imps.c stage2.c terminfo.c tparm.c graphics.c
- pre_stage2_exec_CFLAGS = $(STAGE2_COMPILE) $(FSYS_CFLAGS)
- pre_stage2_exec_CCASFLAGS = $(STAGE2_COMPILE) $(FSYS_CFLAGS)
- pre_stage2_exec_LDFLAGS = $(PRE_STAGE2_LINK)
---- grub-0.93/stage2/asm.S.graphics	2002-12-28 23:37:03.000000000 -0500
-+++ grub-0.93/stage2/asm.S	2002-12-28 23:37:03.000000000 -0500
-@@ -2224,6 +2224,156 @@
+--- grub-0.95/stage2/asm.S.graphics	2004-06-18 17:35:51.932054040 -0400
++++ grub-0.95/stage2/asm.S	2004-06-18 17:35:52.473971656 -0400
+@@ -2215,6 +2215,156 @@
  	pop	%ebx
  	pop	%ebp
  	ret
@@ -202,9 +157,60 @@
  		
  /*
   * getrtsecs()
---- grub-0.93/stage2/builtins.c.graphics	2002-12-28 23:37:03.000000000 -0500
-+++ grub-0.93/stage2/builtins.c	2002-12-28 23:37:03.000000000 -0500
-@@ -857,6 +857,138 @@
+--- grub-0.95/stage2/stage2.c.graphics	2004-06-18 17:35:52.314995824 -0400
++++ grub-0.95/stage2/stage2.c	2004-06-18 17:35:52.494968464 -0400
+@@ -233,6 +233,7 @@
+ {
+   int c, time1, time2 = -1, first_entry = 0;
+   char *cur_entry = 0;
++  struct term_entry *prev_term = NULL;
+ 
+   /*
+    *  Main loop for menu UI.
+@@ -807,6 +808,15 @@
+   
+   cls ();
+   setcursor (1);
++  /* if our terminal needed initialization, we should shut it down
++   * before booting the kernel, but we want to save what it was so
++   * we can come back if needed */
++  prev_term = current_term;
++  if (current_term->shutdown) 
++    {
++      (*current_term->shutdown)();
++      current_term = term_table; /* assumption: console is first */
++    }
+   
+   while (1)
+     {
+@@ -838,6 +848,13 @@
+ 	break;
+     }
+ 
++  /* if we get back here, we should go back to what our term was before */
++  current_term = prev_term;
++  if (current_term->startup)
++      /* if our terminal fails to initialize, fall back to console since
++       * it should always work */
++      if ((*current_term->startup)() == 0)
++          current_term = term_table; /* we know that console is first */
+   show_menu = 1;
+   goto restart;
+ }
+@@ -1082,6 +1099,10 @@
+ 	  while (is_preset);
+ 	}
+ 
++      /* go ahead and make sure the terminal is setup */
++      if (current_term->startup)
++        (*current_term->startup)();
++
+       if (! num_entries)
+ 	{
+ 	  /* If no acceptable config file, goto command-line, starting
+--- grub-0.95/stage2/builtins.c.graphics	2004-06-18 17:35:52.370987312 -0400
++++ grub-0.95/stage2/builtins.c	2004-06-18 17:35:52.482970288 -0400
+@@ -858,6 +858,138 @@
  };
  #endif /* SUPPORT_NETBOOT */
  
@@ -343,7 +349,7 @@
  
  /* displayapm */
  static int
-@@ -4071,7 +4203,7 @@
+@@ -4090,7 +4222,7 @@
  };
  
  
@@ -352,7 +358,7 @@
  /* terminal */
  static int
  terminal_func (char *arg, int flags)
-@@ -4230,17 +4362,21 @@
+@@ -4249,17 +4381,21 @@
   end:
    current_term = term_table + default_term;
    current_term->flags = term_flags;
@@ -379,7 +385,7 @@
    
    return 0;
  }
-@@ -4250,7 +4386,7 @@
+@@ -4269,7 +4405,7 @@
    "terminal",
    terminal_func,
    BUILTIN_MENU | BUILTIN_CMDLINE | BUILTIN_HELP_LIST,
@@ -388,7 +394,7 @@
    "Select a terminal. When multiple terminals are specified, wait until"
    " you push any key to continue. If both console and serial are specified,"
    " the terminal to which you input a key first will be selected. If no"
-@@ -4262,7 +4398,7 @@
+@@ -4281,7 +4417,7 @@
    " seconds. The option --lines specifies the maximum number of lines."
    " The option --silent is used to suppress messages."
  };
@@ -397,7 +403,7 @@
  
  
  #ifdef SUPPORT_SERIAL
-@@ -4785,6 +4921,9 @@
+@@ -4809,6 +4945,9 @@
  /* The table of builtin commands. Sorted in dictionary order.  */
  struct builtin *builtin_table[] =
  {
@@ -407,7 +413,7 @@
    &builtin_blocklist,
    &builtin_boot,
  #ifdef SUPPORT_NETBOOT
-@@ -4792,6 +4931,7 @@
+@@ -4816,6 +4955,7 @@
  #endif /* SUPPORT_NETBOOT */
    &builtin_cat,
    &builtin_chainloader,
@@ -415,7 +421,7 @@
    &builtin_cmp,
    &builtin_color,
    &builtin_configfile,
-@@ -4811,6 +4951,9 @@
+@@ -4835,6 +4975,9 @@
    &builtin_embed,
    &builtin_fallback,
    &builtin_find,
@@ -425,7 +431,7 @@
    &builtin_fstest,
    &builtin_geometry,
    &builtin_halt,
-@@ -4854,9 +4997,12 @@
+@@ -4878,9 +5021,12 @@
  #endif /* SUPPORT_SERIAL */
    &builtin_setkey,
    &builtin_setup,
@@ -440,126 +446,8 @@
  #ifdef SUPPORT_SERIAL
    &builtin_terminfo,
  #endif /* SUPPORT_SERIAL */
---- grub-0.93/stage2/char_io.c.graphics	2002-12-02 18:49:07.000000000 -0500
-+++ grub-0.93/stage2/char_io.c	2002-12-28 23:37:03.000000000 -0500
-@@ -35,6 +35,7 @@
-     {
-       "console",
-       0,
-+      24,
-       console_putchar,
-       console_checkkey,
-       console_getkey,
-@@ -43,13 +44,16 @@
-       console_cls,
-       console_setcolorstate,
-       console_setcolor,
--      console_setcursor
-+      console_setcursor,
-+      0, 
-+      0
-     },
- #ifdef SUPPORT_SERIAL
-     {
-       "serial",
-       /* A serial device must be initialized.  */
-       TERM_NEED_INIT,
-+      24,
-       serial_putchar,
-       serial_checkkey,
-       serial_getkey,
-@@ -58,6 +62,8 @@
-       serial_cls,
-       serial_setcolorstate,
-       0,
-+      0,
-+      0, 
-       0
-     },
- #endif /* SUPPORT_SERIAL */
-@@ -65,6 +71,7 @@
-     {
-       "hercules",
-       0,
-+      24,
-       hercules_putchar,
-       console_checkkey,
-       console_getkey,
-@@ -73,9 +80,28 @@
-       hercules_cls,
-       hercules_setcolorstate,
-       hercules_setcolor,
--      hercules_setcursor
-+      hercules_setcursor,
-+      0,
-+      0
-     },      
- #endif /* SUPPORT_HERCULES */
-+#ifdef SUPPORT_GRAPHICS
-+    { "graphics",
-+      TERM_NEED_INIT, /* flags */
-+      30, /* number of lines */
-+      graphics_putchar, /* putchar */
-+      console_checkkey, /* checkkey */
-+      console_getkey, /* getkey */
-+      graphics_getxy, /* getxy */
-+      graphics_gotoxy, /* gotoxy */
-+      graphics_cls, /* cls */
-+      graphics_setcolorstate, /* setcolorstate */
-+      graphics_setcolor, /* setcolor */
-+      graphics_setcursor, /* nocursor */
-+      graphics_init, /* initialize */
-+      graphics_end /* shutdown */
-+    },
-+#endif /* SUPPORT_GRAPHICS */
-     /* This must be the last entry.  */
-     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-   };
-@@ -1039,13 +1065,15 @@
- 		 the following grub_printf call will print newlines.  */
- 	      count_lines = -1;
- 
-+	      grub_printf("\n");
- 	      if (current_term->setcolorstate)
- 		current_term->setcolorstate (COLOR_STATE_HIGHLIGHT);
- 	      
--	      grub_printf ("\n[Hit return to continue]");
-+	      grub_printf ("[Hit return to continue]");
- 
- 	      if (current_term->setcolorstate)
- 		current_term->setcolorstate (COLOR_STATE_NORMAL);
-+	        
- 	      
- 	      do
- 		{
-@@ -1083,7 +1111,7 @@
- cls (void)
- {
-   /* If the terminal is dumb, there is no way to clean the terminal.  */
--  if (current_term->flags & TERM_DUMB)
-+  if (current_term->flags & TERM_DUMB) 
-     grub_putchar ('\n');
-   else
-     current_term->cls ();
-@@ -1207,6 +1235,16 @@
-   return ! errnum;
- }
- 
-+void
-+grub_memcpy(void *dest, const void *src, int len)
-+{
-+  int i;
-+  register char *d = (char*)dest, *s = (char*)src;
-+
-+  for (i = 0; i < len; i++)
-+    d[i] = s[i];
-+}
-+
- void *
- grub_memmove (void *to, const void *from, int len)
- {
---- /dev/null	2002-10-04 14:48:04.000000000 -0400
-+++ grub-0.93/stage2/graphics.c	2002-12-28 23:37:03.000000000 -0500
+--- /dev/null	2004-02-23 16:02:56.000000000 -0500
++++ grub-0.95/stage2/graphics.c	2004-06-18 17:35:52.488969376 -0400
 @@ -0,0 +1,552 @@
 +/* graphics.c - graphics mode support for GRUB */
 +/* Implemented as a terminal type by Jeremy Katz <katzj@redhat.com> based
@@ -1113,114 +1001,54 @@
 +}
 +
 +#endif /* SUPPORT_GRAPHICS */
---- /dev/null	2002-10-04 14:48:04.000000000 -0400
-+++ grub-0.93/stage2/graphics.h	2002-12-28 23:37:03.000000000 -0500
-@@ -0,0 +1,42 @@
-+/* graphics.h - graphics console interface */
-+/*
-+ *  GRUB  --  GRand Unified Bootloader
-+ *  Copyright (C) 2002  Free Software Foundation, Inc.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-+ */
-+
-+#ifndef GRAPHICS_H
-+#define GRAPHICS_H
-+
-+/* magic constant */
-+#define VIDEOMEM 0xA0000
-+
-+/* function prototypes */
-+char *graphics_get_splash(void);
-+
-+int read_image(char *s);
-+void graphics_cursor(int set);
-+
-+/* function prototypes for asm functions */
-+void * graphics_get_font();
-+void graphics_set_palette(int idx, int red, int green, int blue);
-+void set_int1c_handler();
-+void unset_int1c_handler();
-+
-+extern short cursorX, cursorY;
-+extern char cursorBuf[16];
-+
-+#endif /* GRAPHICS_H */
---- grub-0.93/stage2/shared.h.graphics	2002-12-28 23:37:03.000000000 -0500
-+++ grub-0.93/stage2/shared.h	2002-12-28 23:37:03.000000000 -0500
-@@ -856,6 +856,7 @@
- int grub_tolower (int c);
- int grub_isspace (int c);
- int grub_strncat (char *s1, const char *s2, int n);
-+void grub_memcpy(void *dest, const void *src, int len);
- void *grub_memmove (void *to, const void *from, int len);
- void *grub_memset (void *start, int c, int len);
- int grub_strncat (char *s1, const char *s2, int n);
---- grub-0.93/stage2/stage2.c.graphics	2002-12-28 23:37:03.000000000 -0500
-+++ grub-0.93/stage2/stage2.c	2002-12-28 23:37:03.000000000 -0500
-@@ -233,6 +233,7 @@
- {
-   int c, time1, time2 = -1, first_entry = 0;
-   char *cur_entry = 0;
-+  struct term_entry *prev_term = NULL;
+--- grub-0.95/stage2/Makefile.am.graphics	2004-06-13 13:57:27.000000000 -0400
++++ grub-0.95/stage2/Makefile.am	2004-06-18 17:36:58.289966104 -0400
+@@ -7,7 +7,7 @@
+         fat.h filesys.h freebsd.h fs.h hercules.h i386-elf.h \
+ 	imgact_aout.h iso9660.h jfs.h mb_header.h mb_info.h md5.h \
+ 	nbi.h pc_slice.h serial.h shared.h smp-imps.h term.h \
+-	terminfo.h tparm.h nbi.h ufs2.h vstafs.h xfs.h
++	terminfo.h tparm.h nbi.h ufs2.h vstafs.h xfs.h graphics.h
+ EXTRA_DIST = setjmp.S apm.S $(noinst_SCRIPTS)
  
-   /*
-    *  Main loop for menu UI.
-@@ -807,6 +808,15 @@
-   
-   cls ();
-   setcursor (1);
-+  /* if our terminal needed initialization, we should shut it down
-+   * before booting the kernel, but we want to save what it was so
-+   * we can come back if needed */
-+  prev_term = current_term;
-+  if (current_term->shutdown) 
-+    {
-+      (*current_term->shutdown)();
-+      current_term = term_table; /* assumption: console is first */
-+    }
-   
-   while (1)
-     {
-@@ -838,6 +848,13 @@
- 	break;
-     }
+ # For <stage1.h>.
+@@ -19,7 +19,7 @@
+ 	disk_io.c fsys_ext2fs.c fsys_fat.c fsys_ffs.c fsys_iso9660.c \
+ 	fsys_jfs.c fsys_minix.c fsys_reiserfs.c fsys_ufs2.c \
+ 	fsys_vstafs.c fsys_xfs.c gunzip.c md5.c serial.c stage2.c \
+-	terminfo.c tparm.c
++	terminfo.c tparm.c graphics.c
+ libgrub_a_CFLAGS = $(GRUB_CFLAGS) -I$(top_srcdir)/lib \
+ 	-DGRUB_UTIL=1 -DFSYS_EXT2FS=1 -DFSYS_FAT=1 -DFSYS_FFS=1 \
+ 	-DFSYS_ISO9660=1 -DFSYS_JFS=1 -DFSYS_MINIX=1 -DFSYS_REISERFS=1 \
+@@ -80,8 +80,14 @@
+ HERCULES_FLAGS =
+ endif
  
-+  /* if we get back here, we should go back to what our term was before */
-+  current_term = prev_term;
-+  if (current_term->startup)
-+      /* if our terminal fails to initialize, fall back to console since
-+       * it should always work */
-+      if ((*current_term->startup)() == 0)
-+          current_term = term_table; /* we know that console is first */
-   show_menu = 1;
-   goto restart;
- }
-@@ -1082,6 +1099,10 @@
- 	  while (is_preset);
- 	}
- 
-+      /* go ahead and make sure the terminal is setup */
-+      if (current_term->startup)
-+        (*current_term->startup)();
++if GRAPHICS_SUPPORT
++GRAPHICS_FLAGS = -DSUPPORT_GRAPHICS=1
++else
++GRAPHICS_FLAGS =
++endif
 +
-       if (! num_entries)
- 	{
- 	  /* If no acceptable config file, goto command-line, starting
---- grub-0.93/stage2/term.h.graphics	2002-12-02 17:55:13.000000000 -0500
-+++ grub-0.93/stage2/term.h	2002-12-28 23:37:03.000000000 -0500
+ STAGE2_COMPILE = $(STAGE2_CFLAGS) -fno-builtin -nostdinc \
+-	$(NETBOOT_FLAGS) $(SERIAL_FLAGS) $(HERCULES_FLAGS)
++	$(NETBOOT_FLAGS) $(SERIAL_FLAGS) $(HERCULES_FLAGS) $(GRAPHICS_FLAGS)
+ 
+ STAGE1_5_LINK = -nostdlib -Wl,-N -Wl,-Ttext -Wl,2000
+ STAGE1_5_COMPILE = $(STAGE2_COMPILE) -DNO_DECOMPRESSION=1 -DSTAGE1_5=1
+@@ -91,7 +97,8 @@
+ 	cmdline.c common.c console.c disk_io.c fsys_ext2fs.c \
+ 	fsys_fat.c fsys_ffs.c fsys_iso9660.c fsys_jfs.c fsys_minix.c \
+ 	fsys_reiserfs.c fsys_ufs2.c fsys_vstafs.c fsys_xfs.c gunzip.c \
+-	hercules.c md5.c serial.c smp-imps.c stage2.c terminfo.c tparm.c
++	hercules.c md5.c serial.c smp-imps.c stage2.c terminfo.c tparm.c \
++	graphics.c
+ pre_stage2_exec_CFLAGS = $(STAGE2_COMPILE) $(FSYS_CFLAGS)
+ pre_stage2_exec_CCASFLAGS = $(STAGE2_COMPILE) $(FSYS_CFLAGS)
+ pre_stage2_exec_LDFLAGS = $(PRE_STAGE2_LINK)
+--- grub-0.95/stage2/term.h.graphics	2003-07-09 07:45:53.000000000 -0400
++++ grub-0.95/stage2/term.h	2004-06-18 17:35:52.496968160 -0400
 @@ -60,6 +60,8 @@
    const char *name;
    /* The feature flags defined above.  */
@@ -1266,9 +1094,182 @@
 +#endif /* SUPPORT_GRAPHICS */
 +
  #endif /* ! GRUB_TERM_HEADER */
---- grub-0.93/configure.in.graphics	2002-12-28 23:37:03.000000000 -0500
-+++ grub-0.93/configure.in	2002-12-28 23:37:03.000000000 -0500
-@@ -559,6 +559,11 @@
+--- /dev/null	2004-02-23 16:02:56.000000000 -0500
++++ grub-0.95/stage2/graphics.h	2004-06-18 17:35:52.490969072 -0400
+@@ -0,0 +1,42 @@
++/* graphics.h - graphics console interface */
++/*
++ *  GRUB  --  GRand Unified Bootloader
++ *  Copyright (C) 2002  Free Software Foundation, Inc.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#ifndef GRAPHICS_H
++#define GRAPHICS_H
++
++/* magic constant */
++#define VIDEOMEM 0xA0000
++
++/* function prototypes */
++char *graphics_get_splash(void);
++
++int read_image(char *s);
++void graphics_cursor(int set);
++
++/* function prototypes for asm functions */
++void * graphics_get_font();
++void graphics_set_palette(int idx, int red, int green, int blue);
++void set_int1c_handler();
++void unset_int1c_handler();
++
++extern short cursorX, cursorY;
++extern char cursorBuf[16];
++
++#endif /* GRAPHICS_H */
+--- grub-0.95/stage2/shared.h.graphics	2004-06-18 17:35:52.372987008 -0400
++++ grub-0.95/stage2/shared.h	2004-06-18 17:35:52.492968768 -0400
+@@ -873,6 +873,7 @@
+ int grub_tolower (int c);
+ int grub_isspace (int c);
+ int grub_strncat (char *s1, const char *s2, int n);
++void grub_memcpy(void *dest, const void *src, int len);
+ void *grub_memmove (void *to, const void *from, int len);
+ void *grub_memset (void *start, int c, int len);
+ int grub_strncat (char *s1, const char *s2, int n);
+--- grub-0.95/stage2/char_io.c.graphics	2004-05-23 12:45:43.000000000 -0400
++++ grub-0.95/stage2/char_io.c	2004-06-18 17:35:52.485969832 -0400
+@@ -35,6 +35,7 @@
+     {
+       "console",
+       0,
++      24,
+       console_putchar,
+       console_checkkey,
+       console_getkey,
+@@ -43,13 +44,16 @@
+       console_cls,
+       console_setcolorstate,
+       console_setcolor,
+-      console_setcursor
++      console_setcursor,
++      0, 
++      0
+     },
+ #ifdef SUPPORT_SERIAL
+     {
+       "serial",
+       /* A serial device must be initialized.  */
+       TERM_NEED_INIT,
++      24,
+       serial_putchar,
+       serial_checkkey,
+       serial_getkey,
+@@ -58,6 +62,8 @@
+       serial_cls,
+       serial_setcolorstate,
+       0,
++      0,
++      0, 
+       0
+     },
+ #endif /* SUPPORT_SERIAL */
+@@ -65,6 +71,7 @@
+     {
+       "hercules",
+       0,
++      24,
+       hercules_putchar,
+       console_checkkey,
+       console_getkey,
+@@ -73,9 +80,28 @@
+       hercules_cls,
+       hercules_setcolorstate,
+       hercules_setcolor,
+-      hercules_setcursor
++      hercules_setcursor,
++      0,
++      0
+     },      
+ #endif /* SUPPORT_HERCULES */
++#ifdef SUPPORT_GRAPHICS
++    { "graphics",
++      TERM_NEED_INIT, /* flags */
++      30, /* number of lines */
++      graphics_putchar, /* putchar */
++      console_checkkey, /* checkkey */
++      console_getkey, /* getkey */
++      graphics_getxy, /* getxy */
++      graphics_gotoxy, /* gotoxy */
++      graphics_cls, /* cls */
++      graphics_setcolorstate, /* setcolorstate */
++      graphics_setcolor, /* setcolor */
++      graphics_setcursor, /* nocursor */
++      graphics_init, /* initialize */
++      graphics_end /* shutdown */
++    },
++#endif /* SUPPORT_GRAPHICS */
+     /* This must be the last entry.  */
+     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+   };
+@@ -1046,13 +1072,15 @@
+ 		 the following grub_printf call will print newlines.  */
+ 	      count_lines = -1;
+ 
++	      grub_printf("\n");
+ 	      if (current_term->setcolorstate)
+ 		current_term->setcolorstate (COLOR_STATE_HIGHLIGHT);
+ 	      
+-	      grub_printf ("\n[Hit return to continue]");
++	      grub_printf ("[Hit return to continue]");
+ 
+ 	      if (current_term->setcolorstate)
+ 		current_term->setcolorstate (COLOR_STATE_NORMAL);
++	        
+ 	      
+ 	      do
+ 		{
+@@ -1090,7 +1118,7 @@
+ cls (void)
+ {
+   /* If the terminal is dumb, there is no way to clean the terminal.  */
+-  if (current_term->flags & TERM_DUMB)
++  if (current_term->flags & TERM_DUMB) 
+     grub_putchar ('\n');
+   else
+     current_term->cls ();
+@@ -1214,6 +1242,16 @@
+   return ! errnum;
+ }
+ 
++void
++grub_memcpy(void *dest, const void *src, int len)
++{
++  int i;
++  register char *d = (char*)dest, *s = (char*)src;
++
++  for (i = 0; i < len; i++)
++    d[i] = s[i];
++}
++
+ void *
+ grub_memmove (void *to, const void *from, int len)
+ {
+--- grub-0.95/configure.ac.graphics	2004-06-18 17:35:52.211011632 -0400
++++ grub-0.95/configure.ac	2004-06-18 17:35:52.498967856 -0400
+@@ -595,6 +595,11 @@
    [  --enable-diskless       enable diskless support])
  AM_CONDITIONAL(DISKLESS_SUPPORT, test "x$enable_diskless" = xyes)
  
