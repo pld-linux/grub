@@ -126,6 +126,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not mtime md5 size) %{_datadir}/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
-%{_infodir}/*.info*.gz
+%{_infodir}/*.info*
 %{_mandir}/*/*
 /etc/sysconfig/rc-boot/%{name}_functions.sh
