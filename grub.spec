@@ -1,14 +1,15 @@
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
-Summary(es):	GRUB boot loader
-Summary(pt):	GRUB boot loader
+Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.90
 Release:	2
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
+Group(es):	Base
 Group(pl):	Podstawowe
+Group(pt_BR):	Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
@@ -50,7 +51,14 @@ El administrador GRUB puede ser una buena alternativa a LILO, para
 usuarios conmás experiencia y que deseen obtener más recursos de su
 cargador de inicialización (boot loader).
 
-%description -l pt
+%description -l pl
+GRUB jest bootloaderem na licencji GNU, maj±cym na celu unifikacjê
+procesu bootowania na systemach x86. Potrafi nie tylko ³adowaæ j±dra
+Linuksa i *BSD: posiada równie¿ implementacje standardu Multiboot,
+który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
+(czego wymagaj± modu³owe j±dra, takie jak GNU Hurd).
+
+%description -l pt_BR
 Esse é o GRUB - Grand Unified Boot Loader - um gerenciador de boot
 capaz de entrar na maioria dos sistemas operacionais livres - Linux,
 FreeBSD, NetBSD, GNU Mach, etc. assim como na maioria dos sistemas
@@ -58,13 +66,6 @@ operacionais comerciais para PC.
 
 O GRUB pode ser uma boa alternativa ao LILO, para usuários mais
 avançados e que querem mais recursos de seu boot loader.
-
-%description -l pl
-GRUB jest bootloaderem na licencji GNU, maj±cym na celu unifikacjê
-procesu bootowania na systemach x86. Potrafi nie tylko ³adowaæ j±dra
-Linuksa i *BSD: posiada równie¿ implementacje standardu Multiboot,
-który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
-(czego wymagaj± modu³owe j±dra, takie jak GNU Hurd).
 
 %prep
 %setup -q
@@ -96,7 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
 	$RPM_BUILD_ROOT%{_datadir}/grub/
 
-install %{SOURCE1} $RPM_BUILD_ROOT/boot/grub/menu.lst
+install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
@@ -117,7 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.gz docs/menu.lst.gz
 %dir %{_datadir}/grub
 %{_datadir}/grub/*stage*
-%config(noreplace) %verify(not mtime md5 size) /boot/grub/menu.lst
+%config(noreplace) %verify(not mtime md5 size) %{_datadir}/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
 %{_infodir}/*.info*.gz
