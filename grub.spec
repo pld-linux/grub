@@ -3,8 +3,8 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
-Version:	0.5.96.1
-Release:	5
+Version:	0.90
+Release:	1
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
@@ -19,6 +19,9 @@ Patch3:		%{name}-dont-give-mem-to-kernel.patch
 Patch4:		%{name}-ezd.patch
 Patch5:		%{name}-init-config-end--prepatch.patch
 Patch6:		%{name}-altconfigfile.patch
+# http://tzukanov.narod.ru/grub-jfs_xfs
+Patch7:		%{name}-jfs+xfs-1.0-core.patch
+Patch8:		%{name}-jfs+xfs-1.0-build.patch
 Provides:	bootloader
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -69,11 +72,13 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
+%patch8 -p1
 
 rm -rf doc/*info*
 
 %build
-%configure
+%configure2_13
 %{__make}
 
 %install
@@ -81,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* \
+mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
 	$RPM_BUILD_ROOT%{_datadir}/grub/
 
 install %{SOURCE1} $RPM_BUILD_ROOT/boot/grub/menu.lst
