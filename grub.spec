@@ -1,7 +1,3 @@
-#
-# Conditional build:
-# _with_debug	- enable debugging
-#
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
@@ -99,13 +95,14 @@ rm -rf doc/*info*
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-CFLAGS="-Os %{?_with_debug:-g}" ; export CFLAGS
+CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
 %configure \
 	--disable-auto-linux-mem-opt
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
@@ -114,7 +111,6 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
-install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 install %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/grub/splash.xpm.gz
 
