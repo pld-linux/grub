@@ -3,7 +3,7 @@ Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.5.96.1
-Release:	2
+Release:	3
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
@@ -18,6 +18,7 @@ ExcludeArch:	sparc sparc64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
+%define		_datadir	/boot
 
 %description
 GRUB is a GPLed bootloader intended to unify bootloading across x86
@@ -72,9 +73,6 @@ rm -rf $RPM_BUILD_ROOT
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/
 perl -p -i -e 's|VERSION|%{version}|' $RPM_BUILD_ROOT%{_sbindir}/$(basename %{SOURCE1})
 
-# dangerous ?
-install -d $RPM_BUILD_ROOT/boot/grub/
-mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* $RPM_BUILD_ROOT/boot/grub/
 install %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
 
 gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
@@ -92,9 +90,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc *.gz docs/menu.lst.gz
 %dir /boot/grub
+%dir /boot/grub/%{_arch}-%{_vendor}
+%{_datadir}/grub/%{_arch}-%{_vendor}/*stage*
 %config(noreplace) %verify(not mtime md5 size) /boot/grub/menu.lst
-/boot/grub/*stage*
-%{_infodir}/*.info*.gz
-%{_mandir}/*/*
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
+%{_infodir}/*.info*.gz
+%{_mandir}/*/*
