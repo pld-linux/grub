@@ -3,18 +3,20 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.91
-Release:	2
+Release:	3
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
-Patch0:		%{name}-config.patch
-Patch1:		%{name}-info.patch
-Patch2:		%{name}-grub-install.patch
-Patch3:		%{name}-ezd.patch
-Patch4:		%{name}-init-config-end--prepatch.patch
+Source4:	${name}-splash.xpm.gz
+Patch0:		${name}-vga16.patch
+Patch1:		%{name}-config.patch
+Patch2:		%{name}-info.patch
+Patch3:		%{name}-grub-install.patch
+Patch4:		%{name}-ezd.patch
+Patch5:		%{name}-init-config-end--prepatch.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 Provides:	bootloader
@@ -65,6 +67,7 @@ avançados e que querem mais recursos de seu boot loader.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 rm -rf doc/*info*
 
@@ -88,6 +91,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
+install %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/grub/splash.xpm.gz
 
 gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
 
