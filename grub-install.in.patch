@@ -1,5 +1,5 @@
---- grub-install.in.orig	2002-05-20 13:21:50.000000000 +0200
-+++ grub-install.in	2003-09-05 21:20:35.000000000 +0200
+--- util/grub-install.in.orig	2002-05-20 13:21:50.000000000 +0200
++++ util/grub-install.in	2003-09-05 21:20:35.000000000 +0200
 @@ -27,7 +27,7 @@
  host_cpu=@host_cpu@
  host_os=@host_os@
