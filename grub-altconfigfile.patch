@@ -11,13 +11,11 @@ diff -u -r grub-0.5.94.old/stage2/builtins.c grub-0.5.94/stage2/builtins.c
  /* The default entry.  */
  int default_entry = 0;
  /* The fallback entry.  */
-@@ -84,6 +87,7 @@
+@@ -84,4 +87,5 @@
  void
  init_config_end (void)
  {
 +  altconfigfile_clear();
-   keytable_load(0);
-   i18n_load(0);
  }
 @@ -101,6 +105,49 @@
  }
