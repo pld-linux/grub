@@ -19,22 +19,20 @@ Source4:	%{name}-splash.xpm.gz
 Patch0:		%{name}-install.in.patch
 Patch1:		%{name}-installcopyonly.patch
 Patch2:		%{name}-addsyncs.patch
-Patch3:		%{name}-staticcurses.patch
-Patch4:		%{name}-automake16.patch
-Patch5:		%{name}-endedit.patch
-Patch6:		%{name}-largedisk.patch
-Patch7:		%{name}-append.patch
-Patch8:		%{name}-bootonce.patch
-Patch9:		%{name}-graphics.patch
-Patch10:	%{name}-splashimagehelp.patch
-Patch11:	%{name}-graphics-bootterm.patch
-Patch12:	%{name}-serial-terminfo.patch
-Patch13:	%{name}-special-device-names.patch
-Patch14:	%{name}-ncurses.patch
+Patch3:		%{name}-automake16.patch
+Patch4:		%{name}-endedit.patch
+Patch5:		%{name}-largedisk.patch
+Patch6:		%{name}-append.patch
+Patch7:		%{name}-bootonce.patch
+Patch8:		%{name}-graphics.patch
+Patch9:		%{name}-splashimagehelp.patch
+Patch10:	%{name}-graphics-bootterm.patch
+Patch11:	%{name}-serial-terminfo.patch
+Patch12:	%{name}-special-device-names.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
-BuildRequires:	ncurses-static
+BuildRequires:	ncurses-devel
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
@@ -93,8 +91,6 @@ avançados e que querem mais recursos de seu boot loader.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p0
-%patch13 -p1
-%patch14 -p1
 
 rm -rf doc/*info*
 
