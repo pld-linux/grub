@@ -6,30 +6,25 @@ Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
-Version:	0.93
-Release:	2
+Version:	0.94
+Release:	1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-# Source0-md5:	289ed7946dec7ac4eac146b3a5c0c608
+# Source0-md5:	299672a99cf59656e653d8ffd7851b56
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
 # Source4-md5:	2842e2955603e3b6d722690b3cdd48a9
 Patch0:		%{name}-install.in.patch
-Patch1:		%{name}-automake16.patch
-Patch2:		%{name}-endedit.patch
-Patch3:		%{name}-largedisk.patch
-Patch4:		%{name}-append.patch
-Patch5:		%{name}-bootonce.patch
-Patch6:		%{name}-graphics.patch
-Patch7:		%{name}-splashimagehelp.patch
-Patch8:		%{name}-graphics-bootterm.patch
-Patch9:		%{name}-serial-terminfo.patch
-Patch10:	%{name}-special-device-names.patch
-Patch11:	%{name}-gcc33.patch
-Patch12:	%{name}-addsyncs.patch
+Patch1:		%{name}-endedit.patch
+Patch2:		%{name}-append.patch
+Patch3:		%{name}-bootonce.patch
+Patch4:		%{name}-graphics.patch
+Patch5:		%{name}-splashimagehelp.patch
+Patch6:		%{name}-graphics-bootterm.patch
+Patch7:		%{name}-special-device-names.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -80,17 +75,13 @@ avançados e que querem mais recursos de seu boot loader.
 %prep
 %setup -q
 %patch0 -p0
-%patch1 -p1
-%patch2 -p0
-%patch3 -p0
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
+%patch1 -p0
+%patch2 -p1
+%patch3 -p1
+#%patch4 -p1
+#%patch5 -p1
+#%patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p0
-%patch10 -p1
-%patch11 -p1
 
 rm -rf doc/*info*
 
