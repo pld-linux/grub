@@ -18,6 +18,13 @@ operating systems. In addition to loading the Linux and *BSD kernels, it
 implements the Multiboot standard, which allows for flexible loading of
 multiple boot images (needed for modular kernels such as the GNU Hurd).
 
+%description -l pl
+GRUB jest bootloaderem na licencji GNU, maj±cym na celu unifikacjê procesu
+bootowania na systemach x86. Potrafi nie tylko ³adowaæ j±dra Linuksa i *BSD:
+posiada równie¿ implementacje standardu Multiboot, który pozwala na elastyczne
+³adowanie wielu obrazów bootowalnych (czego wymagaj± modu³owe j±dra,
+takie jak GNU Hurd).
+
 %prep
 %setup -q
 %patch0 -p1
