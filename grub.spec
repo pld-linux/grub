@@ -2,8 +2,8 @@ Summary:	GRand Unified Bootloader
 Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
-Version:	0.5.94
-Release:	4
+Version:	0.5.95
+Release:	1
 License:	GPL
 Group:		Base
 Group(pl):	Podstawowe
@@ -12,9 +12,7 @@ Source1:	install_grub_on_floppy
 Source2:	grub-linux-menu.lst
 Patch0:		grub-config.patch
 Patch1:		grub-info.patch
-Patch2:		grub-reiserfs.patch
-Patch3:		grub-skipcdroms.patch
-Patch4:		grub-bigpatch.patch
+Patch2:		grub-bigpatch.patch
 ExcludeArch:	sparc sparc64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -59,8 +57,6 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 rm -rf doc/*info*
 
