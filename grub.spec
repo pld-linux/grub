@@ -15,6 +15,7 @@ Patch1:		grub-info.patch
 Patch2:		grub-reiserfs.patch
 Patch3:		grub-skipcdroms.patch
 Patch4:		grub-bigpatch.patch
+ExcludeArch:	sparc sparc64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
