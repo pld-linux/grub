@@ -4,7 +4,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.92
-Release:	3
+Release:	0.1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -23,6 +23,7 @@ Patch7:		%{name}-init-config-end--prepatch.patch
 Patch8:		http://alpha.polynum.org/misc/grub-0.92_cd+ef.diff.gz
 Patch9:		%{name}-ac_fix.patch
 Patch10:	%{name}-am_fix.patch
+Patch11:	%{name}-0.92-Conectiva-vga16.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -73,25 +74,27 @@ avançados e que querem mais recursos de seu boot loader.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %{?_with_exp:%patch8 -p1}
-%patch9 -p1
-%patch10 -p1
+#%patch9 -p1
+#%patch10 -p1
+%patch11 -p1
 
 rm -rf doc/*info*
 
 %build
-%{__libtoolize}
-%{__aclocal}
-%{__autoheader}
-%{__autoconf}
-%{__automake}
-%configure
+#%{__libtoolize}
+#%{__aclocal}
+#%{__autoheader}
+#%{__autoconf}
+#%{__automake}
+# some unincluded functions ;S
+%configure2_13
 %{__make}
 
 %install
