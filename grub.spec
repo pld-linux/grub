@@ -9,7 +9,7 @@
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
-Summary(de):	GRand Unified Bootloader
+Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.96
 Release:	1
