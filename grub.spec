@@ -6,12 +6,12 @@ Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
-Version:	0.94
-Release:	4
+Version:	0.95
+Release:	1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-# Source0-md5:	299672a99cf59656e653d8ffd7851b56
+# Source0-md5:	4ca8e4363d5f1980f2c63b7f5cdbe0d1
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
@@ -122,8 +122,8 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 #%patch5 -p1
 #%patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
+#%patch8 -p1
+#%patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
