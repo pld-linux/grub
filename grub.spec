@@ -1,7 +1,7 @@
 Summary:	GRand Unified Bootloader
 Name:		grub
 Version:	0.5.94
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Group(pl):	Podstawowe
