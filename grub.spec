@@ -104,8 +104,8 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
+install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 install %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/grub/splash.xpm.gz
 
 %clean
@@ -128,4 +128,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(754,root,root) %{_sbindir}/*
 %{_infodir}/*.info*.gz
 %{_mandir}/*/*
-%{_sysconfdir}/sysconfig/rc-boot/%{name}_functions.sh
+/etc/sysconfig/rc-boot/%{name}_functions.sh
