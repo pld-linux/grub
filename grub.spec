@@ -4,19 +4,24 @@ Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.5.96.1
-Release:	4
+Release:	5
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
 Group(pl):	Podstawowe
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-Source1:	install_%{name}_on_floppy
-Source2:	%{name}-linux-menu.lst
+Source1:	%{name}-linux-menu.lst
+Source2:	%{name}-rebootin.awk
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-info.patch
-Patch2:		%{name}-sh.patch
+Patch2:		%{name}-grub-install.patch
+Patch3:		%{name}-dont-give-mem-to-kernel.patch
+Patch4:		%{name}-ezd.patch
+Patch5:		%{name}-init-config-end--prepatch.patch
+Patch6:		%{name}-i18n-messages-and-keytable.patch
+Patch7:		%{name}-altconfigfile.patch
 Provides:	bootloader
-ExcludeArch:	sparc sparc64
+ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -59,8 +64,13 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1 -b .wiget
+%patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 rm -rf doc/*info*
 
@@ -73,10 +83,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/
-perl -p -i -e 's|VERSION|%{version}|' $RPM_BUILD_ROOT%{_sbindir}/$(basename %{SOURCE1})
+mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-%{_vendor}/* \
+	$RPM_BUILD_ROOT%{_datadir}/grub/
 
-install %{SOURCE2} $RPM_BUILD_ROOT/boot/grub/menu.lst
+install %{SOURCE1} $RPM_BUILD_ROOT/boot/grub/menu.lst
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
 
 gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
 
@@ -92,9 +103,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc *.gz docs/menu.lst.gz
-%dir /boot/grub
-%dir /boot/grub/%{_arch}-%{_vendor}
-%{_datadir}/grub/%{_arch}-%{_vendor}/*stage*
+%dir %{_datadir}
+%{_datadir}/grub/*stage*
 %config(noreplace) %verify(not mtime md5 size) /boot/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
