@@ -1,0 +1,11 @@
+--- grub-0.92.orig/stage2/Makefile.am	Mon Feb  4 04:55:48 2002
++++ grub-0.92/stage2/Makefile.am	Thu Nov  7 18:00:18 2002
+@@ -10,7 +10,7 @@
+ EXTRA_DIST = setjmp.S apm.S $(noinst_SCRIPTS)
+ 
+ # For <stage1.h>.
+-INCLUDES = -I$(top_srcdir)/stage1
++CFLAGS = -I$(top_srcdir)/stage1 -I$(top_srcdir)
+ 
+ # The library for /sbin/grub.
+ noinst_LIBRARIES = libgrub.a

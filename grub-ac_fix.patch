@@ -1,0 +1,10 @@
+--- grub-0.92.orig/configure.in	Thu Nov  7 16:58:30 2002
++++ grub-0.92/configure.in	Thu Nov  7 16:59:46 2002
+@@ -19,6 +19,7 @@
+ 
+ AC_CANONICAL_HOST
+ AM_PROG_LIBTOOL
++AM_PROG_AS
+ 
+ case "$host_cpu" in
+ i[[3456]]86) host_cpu=i386 ;;
