@@ -3,7 +3,7 @@ Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.5.95
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Group(pl):	Podstawowe
@@ -56,7 +56,7 @@ który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 
 rm -rf doc/*info*
 
