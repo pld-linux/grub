@@ -1,6 +1,6 @@
-diff -rU3 --new-file grub-0.91-vanilla/ChangeLog grub-0.91/ChangeLog
+diff -rU3 grub-0.91-vanilla/ChangeLog grub-0.91/ChangeLog
 --- grub-0.91-vanilla/ChangeLog	Sat Jan 19 21:26:02 2002
-+++ grub-0.91/ChangeLog	Sun Mar 17 23:01:50 2002
++++ grub-0.91/ChangeLog	Wed Apr  3 08:02:05 2002
 @@ -1877,6 +1877,18 @@
  	[!STAGE1_5] (CMDLINE_WIDTH): New macro.
  	[!STAGE1_5] (CMDLINE_MARGIN): Likewise.
@@ -20,9 +20,9 @@ diff -rU3 --new-file grub-0.91-vanilla/ChangeLog grub-0.91/ChangeLog
  	
  2000-08-28  OKUJI Yoshinori  <okuji@gnu.org>
  
-diff -rU3 --new-file grub-0.91-vanilla/configure.in grub-0.91/configure.in
+diff -rU3 grub-0.91-vanilla/configure.in grub-0.91/configure.in
 --- grub-0.91-vanilla/configure.in	Tue Jan 15 11:27:59 2002
-+++ grub-0.91/configure.in	Sun Mar 17 23:01:50 2002
++++ grub-0.91/configure.in	Wed Apr  3 08:02:05 2002
 @@ -18,6 +18,7 @@
  AC_PREREQ(2.13)
  
@@ -44,9 +44,37 @@ diff -rU3 --new-file grub-0.91-vanilla/configure.in grub-0.91/configure.in
  
  dnl Output.
  AC_OUTPUT([Makefile stage1/Makefile stage2/Makefile docs/Makefile \
-diff -rU3 --new-file grub-0.91-vanilla/stage2/asm.S grub-0.91/stage2/asm.S
+diff -rU3 grub-0.91-vanilla/docs/grub.texi grub-0.91/docs/grub.texi
+--- grub-0.91-vanilla/docs/grub.texi	Tue Jan 15 11:24:54 2002
++++ grub-0.91/docs/grub.texi	Wed Apr  3 08:02:40 2002
+@@ -1891,6 +1891,7 @@
+ * rarp::                        Initialize a network device via RARP
+ * serial::                      Set up a serial device
+ * setkey::                      Configure the key map
++* splashimage::                 Use a splash image
+ * terminal::                    Choose a terminal
+ * tftpserver::                  Specify a TFTP server
+ * unhide::                      Unhide a partition
+@@ -2260,6 +2261,16 @@
+ @end deffn
+ 
+ 
++@node splashimage
++@subsection splashimage
++
++@deffn Command splashimage file
++Select an image to use as the background image.  This should be
++specified using normal GRUB device naming syntax.  The format of the
++file is a gzipped xpm which is 640x480 with a 14 color palette.
++@end deffn
++
++
+ @node terminal
+ @subsection terminal
+ 
+diff -rU3 grub-0.91-vanilla/stage2/asm.S grub-0.91/stage2/asm.S
 --- grub-0.91-vanilla/stage2/asm.S	Sat Dec 29 19:05:36 2001
-+++ grub-0.91/stage2/asm.S	Sun Mar 17 23:01:50 2002
++++ grub-0.91/stage2/asm.S	Wed Apr  3 08:02:05 2002
 @@ -1865,7 +1865,7 @@
   *                      %cl = cursor ending scanline
   */
@@ -338,9 +366,9 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/asm.S grub-0.91/stage2/asm.S
  
  /*
   * getrtsecs()
-diff -rU3 --new-file grub-0.91-vanilla/stage2/builtins.c grub-0.91/stage2/builtins.c
+diff -rU3 grub-0.91-vanilla/stage2/builtins.c grub-0.91/stage2/builtins.c
 --- grub-0.91-vanilla/stage2/builtins.c	Thu Jan  3 00:23:30 2002
-+++ grub-0.91/stage2/builtins.c	Sun Mar 17 23:01:50 2002
++++ grub-0.91/stage2/builtins.c	Wed Apr  3 08:02:05 2002
 @@ -133,6 +133,36 @@
    grub_printf ("[%d,%d,%d]", sector, offset, length);
  }
@@ -751,9 +779,9 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/builtins.c grub-0.91/stage2/builti
 +#endif /* VGA16 */
    0
  };
-diff -rU3 --new-file grub-0.91-vanilla/stage2/char_io.c grub-0.91/stage2/char_io.c
+diff -rU3 grub-0.91-vanilla/stage2/char_io.c grub-0.91/stage2/char_io.c
 --- grub-0.91-vanilla/stage2/char_io.c	Fri Jan 18 19:01:26 2002
-+++ grub-0.91/stage2/char_io.c	Sun Mar 17 23:10:44 2002
++++ grub-0.91/stage2/char_io.c	Wed Apr  3 08:02:05 2002
 @@ -262,8 +262,8 @@
  
    /* XXX: These should be defined in shared.h, but I leave these here,
@@ -945,9 +973,9 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/char_io.c grub-0.91/stage2/char_io
    else
      grub_printf ("\e[H\e[J");
  }
-diff -rU3 --new-file grub-0.91-vanilla/stage2/cmdline.c grub-0.91/stage2/cmdline.c
+diff -rU3 grub-0.91-vanilla/stage2/cmdline.c grub-0.91/stage2/cmdline.c
 --- grub-0.91-vanilla/stage2/cmdline.c	Thu Jan  3 00:23:30 2002
-+++ grub-0.91/stage2/cmdline.c	Sun Mar 17 23:01:50 2002
++++ grub-0.91/stage2/cmdline.c	Wed Apr  3 08:02:05 2002
 @@ -125,7 +125,7 @@
    init_page ();
  #ifdef SUPPORT_DISKLESS
@@ -957,9 +985,9 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/cmdline.c grub-0.91/stage2/cmdline
  #endif
    print_cmdline_message (forever);
  
-diff -rU3 --new-file grub-0.91-vanilla/stage2/disk_io.c grub-0.91/stage2/disk_io.c
+diff -rU3 grub-0.91-vanilla/stage2/disk_io.c grub-0.91/stage2/disk_io.c
 --- grub-0.91-vanilla/stage2/disk_io.c	Wed Nov 28 19:43:56 2001
-+++ grub-0.91/stage2/disk_io.c	Sun Mar 17 23:01:50 2002
++++ grub-0.91/stage2/disk_io.c	Wed Apr  3 08:02:05 2002
 @@ -1267,7 +1267,7 @@
  	}
  
@@ -987,9 +1015,9 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/disk_io.c grub-0.91/stage2/disk_io
  	}
        else
  	errnum = ERR_BAD_FILENAME;
-diff -rU3 --new-file grub-0.91-vanilla/stage2/shared.h grub-0.91/stage2/shared.h
+diff -rU3 grub-0.91-vanilla/stage2/shared.h grub-0.91/stage2/shared.h
 --- grub-0.91-vanilla/stage2/shared.h	Tue Jan  8 03:57:36 2002
-+++ grub-0.91/stage2/shared.h	Sun Mar 17 23:01:50 2002
++++ grub-0.91/stage2/shared.h	Wed Apr  3 08:02:05 2002
 @@ -44,6 +44,12 @@
  # define RAW_SEG(x) (x)
  #endif
@@ -1121,9 +1149,9 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/shared.h grub-0.91/stage2/shared.h
  
  /* Low-level disk I/O */
  int get_diskinfo (int drive, struct geometry *geometry);
-diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
+diff -rU3 grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
 --- grub-0.91-vanilla/stage2/stage2.c	Tue Jan  8 03:56:45 2002
-+++ grub-0.91/stage2/stage2.c	Sun Mar 17 23:12:34 2002
++++ grub-0.91/stage2/stage2.c	Wed Apr  3 08:02:05 2002
 @@ -19,7 +19,12 @@
  
  #include "shared.h"
@@ -1298,7 +1326,15 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  	{
  	  first_entry++;
  	  entryno--;
-@@ -399,7 +405,7 @@
+@@ -378,6 +384,7 @@
+ 	      grub_timeout--;
+ 	      
+ 	      /* Print a message.  */
++	      cls();
+ 	      grub_printf ("\rPress `ESC' to enter the menu... %d   ",
+ 			   grub_timeout);
+ 	    }
+@@ -399,7 +406,7 @@
  #endif /* ! GRUB_UTIL */
  
        if (! (terminal & TERMINAL_DUMB))      
@@ -1307,7 +1343,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  
  #ifdef GRUB_UTIL
        /* In the grub shell, always use ACS_*.  */
-@@ -455,10 +461,10 @@
+@@ -455,10 +462,10 @@
  	grub_printf ("\n\nThe selected entry is %d ", entryno);
        else
        {
@@ -1320,7 +1356,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  			      menu_entries);
        }
      }
-@@ -487,9 +493,9 @@
+@@ -487,9 +494,9 @@
  			   entryno, grub_timeout);
  	  else
  	  {
@@ -1332,22 +1368,27 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  	  }
  	  
  	  grub_timeout--;
-@@ -515,12 +521,12 @@
- 	      if (terminal & TERMINAL_DUMB)
- 		grub_putchar ('\r');
- 	      else
--		gotoxy (3, 22);
-+		gotoxy (view_x0 + 3, 22);
- 	      printf ("                                                                    ");
- 	      grub_timeout = -1;
- 	      fallback_entry = -1;
- 	      if (! (terminal & TERMINAL_DUMB))
--		gotoxy (74, 4 + entryno);
-+		gotoxy (view_x1 - 6, view_x0 + 4 + entryno);
- 	    }
+@@ -510,19 +517,6 @@
  
+ 	  c = translate_keycode (getkey ());
+ 
+-	  if (grub_timeout >= 0)
+-	    {
+-	      if (terminal & TERMINAL_DUMB)
+-		grub_putchar ('\r');
+-	      else
+-		gotoxy (3, 22);
+-	      printf ("                                                                    ");
+-	      grub_timeout = -1;
+-	      fallback_entry = -1;
+-	      if (! (terminal & TERMINAL_DUMB))
+-		gotoxy (74, 4 + entryno);
+-	    }
+-
  	  /* We told them above (at least in SUPPORT_SERIAL) to use
-@@ -536,17 +542,17 @@
+ 	     '^' or 'v' so accept these keys.  */
+ 	  if (c == 16 || c == '^')
+@@ -536,17 +530,17 @@
  		{
  		  if (entryno > 0)
  		    {
@@ -1369,7 +1410,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  					  menu_entries);
  		    }
  		}
-@@ -558,17 +564,17 @@
+@@ -558,17 +552,17 @@
  	      else
  		if (entryno < 11)
  		  {
@@ -1391,7 +1432,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  		  }
  	    }
  
-@@ -582,7 +588,7 @@
+@@ -582,7 +576,7 @@
  	      if ((c == 'd') || (c == 'o') || (c == 'O'))
  		{
  		  if (! (terminal & TERMINAL_DUMB))
@@ -1400,7 +1441,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  				     menu_entries);
  
  		  /* insert after is almost exactly like insert before */
-@@ -640,8 +646,8 @@
+@@ -640,8 +634,8 @@
  		    }
  		  else
  		    {
@@ -1411,7 +1452,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  					  menu_entries);
  		    }
  		}
-@@ -664,7 +670,7 @@
+@@ -664,7 +658,7 @@
  		  if (terminal & TERMINAL_DUMB)
  		    grub_printf ("\r                                    ");
  		  else
@@ -1420,7 +1461,20 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  
  		  /* Wipe out the previously entered password */
  		  memset (entered, 0, sizeof (entered));
-@@ -811,6 +817,11 @@
+@@ -799,6 +793,12 @@
+ 		}
+ #endif
+ 	    }
++	  if (grub_timeout >= 0)
++	    {
++	      grub_timeout = -1;
++	      fallback_entry = -1;
++	      goto restart;
++	    }
+ 	}
+     }
+ 
+@@ -811,6 +811,11 @@
    while (1)
      {
        cls ();
@@ -1432,7 +1486,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  
        if (config_entries)
  	printf ("  Booting \'%s\'\n\n",
-@@ -840,6 +851,16 @@
+@@ -840,6 +845,16 @@
  	break;
      }
  
@@ -1449,7 +1503,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
    show_menu = 1;
    goto restart;
  }
-@@ -904,6 +925,560 @@
+@@ -904,6 +919,560 @@
    return pos;
  }
  
@@ -2010,7 +2064,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
  
  /* This is the starting function in C.  */
  void
-@@ -924,6 +1499,14 @@
+@@ -924,6 +1493,14 @@
        menu_entries = (char *) MENU_BUF;
        init_config ();
      }
@@ -2025,7 +2079,7 @@ diff -rU3 --new-file grub-0.91-vanilla/stage2/stage2.c grub-0.91/stage2/stage2.c
        
    /* Initialize the environment for restarting Stage 2.  */
    grub_setjmp (restart_env);
-@@ -1069,6 +1652,29 @@
+@@ -1069,6 +1646,29 @@
  	  while (is_preset);
  	}
  

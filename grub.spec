@@ -3,7 +3,7 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.91
-Release:	5
+Release:	6
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -11,12 +11,14 @@ Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
-Patch0:		%{name}-vga16.patch
-Patch1:		%{name}-config.patch
-Patch2:		%{name}-info.patch
-Patch3:		%{name}-grub-install.patch
-Patch4:		%{name}-ezd.patch
-Patch5:		%{name}-init-config-end--prepatch.patch
+Patch0:		%{name}-bootonce.patch
+Patch1:		%{name}-pwd.patch
+Patch2:		%{name}-vga16.patch
+Patch3:		%{name}-config.patch
+Patch4:		%{name}-info.patch
+Patch5:		%{name}-grub-install.patch
+Patch6:		%{name}-ezd.patch
+Patch7:		%{name}-init-config-end--prepatch.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 Provides:	bootloader
@@ -68,6 +70,8 @@ avançados e que querem mais recursos de seu boot loader.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 rm -rf doc/*info*
 
