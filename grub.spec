@@ -11,6 +11,7 @@ Release:	0.1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
+# Source0-md5:	289ed7946dec7ac4eac146b3a5c0c608
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
