@@ -14,18 +14,18 @@ Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
 Patch0:		%{name}-0.90-install.in.patch
 Patch1:		%{name}-0.90-installcopyonly.patch
-Patch2:		grub-0.90-addsyncs.patch
-Patch3:		grub-0.90-staticcurses.patch
-Patch4:		grub-0.92-automake16.patch
-Patch5:		grub-0.93-endedit.patch
-Patch6:		grub-0.93-largedisk.patch
-Patch7:		grub-0.90-append.patch
-Patch8:		grub-0.91-bootonce.patch
-Patch9:		grub-0.93-graphics.patch
-Patch10:	grub-0.91-splashimagehelp.patch
-Patch11:	grub-0.93-graphics-bootterm.patch
-Patch12:	grub-0.93-serial-terminfo.patch
-Patch13:	grub-0.93-special-device-names.patch
+Patch2:		%{name}-0.90-addsyncs.patch
+Patch3:		%{name}-0.90-staticcurses.patch
+Patch4:		%{name}-0.92-automake16.patch
+Patch5:		%{name}-0.93-endedit.patch
+Patch6:		%{name}-0.93-largedisk.patch
+Patch7:		%{name}-0.90-append.patch
+Patch8:		%{name}-0.91-bootonce.patch
+Patch9:		%{name}-0.93-graphics.patch
+Patch10:	%{name}-0.91-splashimagehelp.patch
+Patch11:	%{name}-0.93-graphics-bootterm.patch
+Patch12:	%{name}-0.93-serial-terminfo.patch
+Patch13:	%{name}-0.93-special-device-names.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -97,7 +97,9 @@ rm -rf doc/*info*
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-%configure
+CFLAGS="-Os -g" ; export CFLAGS
+%configure \
+	--disable-auto-linux-mem-opt
 %{__make}
 
 %install
