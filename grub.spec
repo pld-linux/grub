@@ -4,7 +4,7 @@ Summary(es):	GRUB boot loader
 Summary(pt):	GRUB boot loader
 Name:		grub
 Version:	0.90
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
@@ -12,6 +12,7 @@ Group(pl):	Podstawowe
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
+Source3:	%{name}_functions.sh
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-info.patch
 Patch2:		%{name}-grub-install.patch
@@ -97,6 +98,8 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/grub/%{_arch}-*/* \
 
 install %{SOURCE1} $RPM_BUILD_ROOT/boot/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rc-boot
 
 gzip -9nf TODO BUGS NEWS ChangeLog docs/menu.lst
 
@@ -105,7 +108,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-[ ! -r /etc/sysconfig/rc-boot/grub_functions.sh ] || ln -sf /etc/sysconfig/rc-boot/grub_functions.sh /etc/sysconfig/rc-boot/functions.sh
 
 %postun
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -120,3 +122,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(754,root,root) %{_sbindir}/*
 %{_infodir}/*.info*.gz
 %{_mandir}/*/*
+%{_sysconfdir}/sysconfig/rc-boot/%{name}_functions.sh
