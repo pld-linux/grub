@@ -109,6 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.gz docs/menu.lst.gz
 %dir %{_datadir}/grub
 %{_datadir}/grub/*stage*
+%{_datadir}/grub/splash.xpm.gz
 %config(noreplace) %verify(not mtime md5 size) %{_datadir}/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
