@@ -2,8 +2,8 @@ Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
-Version:	0.90
-Release:	4
+Version:	0.91
+Release:	2
 License:	GPL
 Group:		Base
 Group(de):	Gründsätzlich
@@ -17,13 +17,8 @@ Source3:	%{name}_functions.sh
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-info.patch
 Patch2:		%{name}-grub-install.patch
-Patch3:		%{name}-dont-give-mem-to-kernel.patch
-Patch4:		%{name}-ezd.patch
-Patch5:		%{name}-init-config-end--prepatch.patch
-Patch6:		%{name}-altconfigfile.patch
-# http://tzukanov.narod.ru/grub-jfs_xfs
-Patch7:		%{name}-jfs+xfs-1.0-core.patch
-Patch8:		%{name}-jfs+xfs-1.0-build.patch
+Patch3:		%{name}-ezd.patch
+Patch4:		%{name}-init-config-end--prepatch.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 Provides:	bootloader
@@ -74,10 +69,6 @@ avançados e que querem mais recursos de seu boot loader.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
 
 rm -rf doc/*info*
 
