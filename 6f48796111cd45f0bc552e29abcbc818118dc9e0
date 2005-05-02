@@ -1,0 +1,2 @@
+- removed _with_debug bcond and use directlu %{debug},
+- cut %changelog.
