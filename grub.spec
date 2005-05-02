@@ -12,7 +12,7 @@ Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.96
-Release:	1
+Release:	1.1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -211,6 +211,15 @@ install %{SOURCE4} $RPM_BUILD_ROOT%{_libdir}/grub/splash.xpm.gz
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%pre
+# grubby will not work if /boot/grub/menu.lst is symlink
+# so make sure menu.lst is file and grub.conf (if any) is symlink
+if [ -L /boot/grub/menu.lst ] && [ -f /boot/grub/grub.conf ]; then
+    mv -f /boot/grub/menu.lst{,.rpmsave}
+    mv -f /boot/grub/{grub.conf,menu.lst}
+    ln -sf menu.lst /boot/grub/grub.conf
+fi
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
