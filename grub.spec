@@ -11,12 +11,12 @@ Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
-Version:	0.96
-Release:	1.1
+Version:	0.97
+Release:	0.1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-# Source0-md5:	47c228c88f848873288ad1cd04cc93f0
+# Source0-md5:	cd3f3eb54446be6003156158d51f4884
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
