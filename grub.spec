@@ -5,6 +5,8 @@
 # Conditional build:
 %bcond_with	splashimage	# removes some ethernet cards support
 				# (too much memory occupied?)
+%bcond_with	static		# builds static version
+
 #
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
@@ -40,6 +42,10 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel
+%if %{with static}
+BuildRequires:	ncurses-static
+BuildRequires:	glibc-static
+%endif
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
@@ -152,6 +158,9 @@ rm -rf doc/*info*
 %{__autoconf}
 %{__automake}
 CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
+%if %{with static}
+LDFLAGS="-static"; export LDFLAGS
+%endif
 %configure \
 %if %{without splashimage}
 	--enable-3c503 \
