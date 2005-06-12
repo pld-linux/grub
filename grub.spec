@@ -6,7 +6,6 @@
 %bcond_with	splashimage	# removes some ethernet cards support
 				# (too much memory occupied?)
 %bcond_with	static		# builds static version
-
 #
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
@@ -14,7 +13,7 @@ Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -37,6 +36,7 @@ Patch9:		%{name}-0.94-diskless-fixtg3.patch
 Patch10:	%{name}-geometry-26kernel.patch
 Patch11:	%{name}-i2o.patch
 Patch12:	%{name}-initrdmax.patch
+Patch13:	%{name}-gcc4.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -148,6 +148,7 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 rm -rf doc/*info*
 
@@ -157,7 +158,7 @@ rm -rf doc/*info*
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-CFLAGS="-Os %{?debug:-g}" ; export CFLAGS
+CFLAGS="-Os %{?debug:-g} -fno-strict-aliasing" ; export CFLAGS
 %if %{with static}
 LDFLAGS="-static"; export LDFLAGS
 %endif
