@@ -49,7 +49,7 @@ BuildRequires:	glibc-static
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
-ExclusiveArch:	%{ix86}
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
