@@ -5,7 +5,11 @@
 # Conditional build:
 %bcond_with	splashimage	# removes some ethernet cards support
 				# (too much memory occupied?)
+%ifarch %{x8664}
+%bcond_without	static		# builds shared version (requires 32bit glibc)
+%else
 %bcond_with	static		# builds static version
+%endif
 #
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
