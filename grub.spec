@@ -17,7 +17,7 @@ Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
-Release:	0.2
+Release:	0.4
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -41,6 +41,7 @@ Patch10:	%{name}-geometry-26kernel.patch
 Patch11:	%{name}-i2o.patch
 Patch12:	%{name}-initrdmax.patch
 Patch13:	%{name}-gcc4.patch
+Patch14:	%{name}-useless.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -153,6 +154,7 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 rm -rf doc/*info*
 
