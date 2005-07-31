@@ -225,6 +225,8 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 install %{SOURCE4} $RPM_BUILD_ROOT%{_libdir}/grub/splash.xpm.gz
 
+rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
