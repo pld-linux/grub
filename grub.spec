@@ -5,11 +5,7 @@
 # Conditional build:
 %bcond_with	splashimage	# removes some ethernet cards support
 				# (too much memory occupied?)
-%ifarch %{x8664}
-%bcond_without	static		# builds shared version (requires 32bit glibc)
-%else
 %bcond_with	static		# builds static version
-%endif
 #
 Summary:	GRand Unified Bootloader
 Summary(pl):	GRUB - bootloader dla x86
@@ -17,7 +13,7 @@ Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
