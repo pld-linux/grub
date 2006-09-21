@@ -8,9 +8,9 @@
 %bcond_with	static		# builds static version
 #
 Summary:	GRand Unified Bootloader
+Summary(de):	GRUB - ein Bootloader für x86
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
-Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
 Release:	2.1
@@ -46,8 +46,8 @@ BuildRequires:	libtool
 BuildRequires:	ncurses-devel
 BuildRequires:	reiser4progs-devel
 %if %{with static}
-BuildRequires:	ncurses-static
 BuildRequires:	glibc-static
+BuildRequires:	ncurses-static
 %endif
 # needed for 'cmp' program
 Requires:	diffutils
@@ -205,8 +205,8 @@ LDFLAGS="-static"; export LDFLAGS
 	--disable-auto-linux-mem-opt
 # if you want to enable following cards for pxeboot comment out patches 8 & 9
 # and comment out --enable-e1000 & --enable-tg3 cards:
-#       --enable-ns8390 \
-#       --enable-sis900
+#	   --enable-ns8390 \
+#	   --enable-sis900
 %{__make}
 
 %install
@@ -233,9 +233,9 @@ rm -rf $RPM_BUILD_ROOT
 # grubby will not work if /boot/grub/menu.lst is symlink
 # so make sure menu.lst is file and grub.conf (if any) is symlink
 if [ -L /boot/grub/menu.lst ] && [ -f /boot/grub/grub.conf ]; then
-    mv -f /boot/grub/menu.lst{,.rpmsave}
-    mv -f /boot/grub/{grub.conf,menu.lst}
-    ln -sf menu.lst /boot/grub/grub.conf
+	mv -f /boot/grub/menu.lst{,.rpmsave}
+	mv -f /boot/grub/{grub.conf,menu.lst}
+	ln -sf menu.lst /boot/grub/grub.conf
 fi
 
 %post
