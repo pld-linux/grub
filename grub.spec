@@ -168,7 +168,7 @@ CFLAGS="-Os %{?debug:-g} -fno-strict-aliasing" ; export CFLAGS
 LDFLAGS="-static"; export LDFLAGS
 %endif
 %configure \
-%if %{without splashimage}
+%if !%{with splashimage}
 	--enable-3c503 \
 	--enable-3c507 \
 	--enable-3c509 \
@@ -257,7 +257,7 @@ fi
 %{_mandir}/*/*
 /etc/sysconfig/rc-boot/%{name}_functions.sh
 
-%if %{without splashimage}
+%if !%{with splashimage}
 %files nb
 %defattr(644,root,root,755)
 %{_libdir}/grub/nbgrub
