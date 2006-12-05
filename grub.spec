@@ -12,33 +12,33 @@ Summary(de):	GRUB - ein Bootloader für x86
 Summary(pl):	GRUB - bootloader dla x86
 Summary(pt_BR):	Gerenciador de inicialização GRUB
 Name:		grub
-Version:	1.95
-Release:	0.1
+Version:	0.97
+Release:	2.1
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
-# Source0-md5:	4ea234d8fc5d551f61bc65e553e51399
+# Source0-md5:	cd3f3eb54446be6003156158d51f4884
 Source1:	%{name}-linux-menu.lst
 Source2:	%{name}-rebootin.awk
 Source3:	%{name}_functions.sh
 Source4:	%{name}-splash.xpm.gz
 # Source4-md5:	2842e2955603e3b6d722690b3cdd48a9
 Patch0:		%{name}-install.in.patch
-#Patch1:		%{name}-endedit.patch
-#Patch2:		%{name}-append.patch
+Patch1:		%{name}-endedit.patch
+Patch2:		%{name}-append.patch
 Patch3:		%{name}-bootonce.patch
 Patch4:		%{name}-graphics.patch
 Patch5:		%{name}-splashimagehelp.patch
 Patch6:		%{name}-graphics-bootterm.patch
-#Patch7:		%{name}-special-device-names.patch
+Patch7:		%{name}-special-device-names.patch
 Patch8:		%{name}-0.94-diskless-1.patch
 Patch9:		%{name}-0.94-diskless-fixtg3.patch
-#Patch10:	%{name}-geometry-26kernel.patch
-#Patch11:	%{name}-i2o.patch
-#Patch12:	%{name}-initrdmax.patch
-#Patch13:	%{name}-gcc4.patch
-#Patch14:	%{name}-useless.patch
-#Patch15:	%{name}-0.97-reiser4-20050808.diff
+Patch10:	%{name}-geometry-26kernel.patch
+Patch11:	%{name}-i2o.patch
+Patch12:	%{name}-initrdmax.patch
+Patch13:	%{name}-gcc4.patch
+Patch14:	%{name}-useless.patch
+Patch15:	%{name}-0.97-reiser4-20050808.diff
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -139,33 +139,30 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p0 CHECKME
-#%patch2 -p1 CHECKME
+%patch1 -p0
+%patch2 -p1
 #%%patch3 -p1
 %{?with_splashimage:%patch4 -p1}
 %{?with_splashimage:%patch5 -p1}
 %{?with_splashimage:%patch6 -p1}
-#%patch7 -p1 CHECKME
+%patch7 -p1
 #%patch8 -p1
 #%patch9 -p1
-#%patch10 -p1 CHECKME
-#%patch11 -p1 CHECKME
-#%patch12 -p1 CHECKME
-#%patch13 -p1 CHECKME
-#%patch14 -p1 CHECKME
-#%patch15 -p1 UPDATE OR DROP
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
 
 rm -rf doc/*info*
 
 %build
-%if 0
-// needs ac 2.60 fix
 %{__libtoolize}
 %{__aclocal}
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-%endif
 CFLAGS="-Os %{?debug:-g} -fno-strict-aliasing" ; export CFLAGS
 %if %{with static}
 LDFLAGS="-static"; export LDFLAGS
@@ -249,28 +246,23 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc TODO NEWS ChangeLog
+%doc TODO BUGS NEWS ChangeLog docs/menu.lst
 %dir %{_libdir}/grub
-#%{_libdir}/grub/*stage*
+%{_libdir}/grub/*stage*
 %{_libdir}/grub/splash.xpm.gz
 %config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/menu.lst
-%config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/command.lst
-%config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/fs.lst
-%config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/moddep.lst
-%{_libdir}/grub/*.mod
-%{_libdir}/grub/*.img
 %attr(754,root,root) %{_bindir}/*
 %attr(754,root,root) %{_sbindir}/*
-#%{_infodir}/*.info*
-#%{_mandir}/*/*
+%{_infodir}/*.info*
+%{_mandir}/*/*
 /etc/sysconfig/rc-boot/%{name}_functions.sh
 
-%if %{without splashimage}
+%if !%{with splashimage}
 %files nb
 %defattr(644,root,root,755)
-#%{_libdir}/grub/nbgrub
+%{_libdir}/grub/nbgrub
 
 %files pxe
 %defattr(644,root,root,755)
-#%{_libdir}/grub/pxegrub
+%{_libdir}/grub/pxegrub
 %endif

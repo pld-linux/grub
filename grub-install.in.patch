@@ -1,56 +1,28 @@
---- grub-1.95/util/i386/pc/grub-install.in~	2006-12-05 17:33:15.599272731 +0200
-+++ grub-1.95/util/i386/pc/grub-install.in	2006-12-05 17:35:31.352330443 +0200
-@@ -28,7 +28,7 @@
- PACKAGE_VERSION=@PACKAGE_VERSION@
- target_cpu=@target_cpu@
- platform=@platform@
--pkglibdir=${libdir}/${PACKAGE_TARNAME}/${target_cpu}-${platform}
+diff -ruN grub-0.96./util/grub-install.in grub-0.96/util/grub-install.in
+--- grub-0.96./util/grub-install.in	2005-02-01 22:18:17.000000000 +0100
++++ grub-0.96/util/grub-install.in	2005-02-01 22:18:52.579617408 +0100
+@@ -27,7 +27,7 @@
+ host_cpu=@host_cpu@
+ host_os=@host_os@
+ host_vendor=@host_vendor@
+-pkglibdir=${libdir}/${PACKAGE}/${host_cpu}-${host_vendor}
 +pkglibdir=${libdir}/${PACKAGE}
  
- grub_setup=${sbindir}/grub-setup
- grub_mkimage=${bindir}/grub-mkimage
-@@ -196,16 +196,6 @@
+ grub_shell=${sbindir}/grub
+ grub_set_default=${sbindir}/grub-set-default
+@@ -406,15 +406,6 @@
      exit 1
  fi
  
 -# Copy the GRUB images to the GRUB directory.
--for file in ${grubdir}/*.mod ${grubdir}/*.lst ${grubdir}/*.img; do
--    if test -f $file && [ "`basename $file`" != menu.lst ]; then
--	rm -f $file || exit 1
--    fi
+-for file in ${grubdir}/stage1 ${grubdir}/stage2 ${grubdir}/*stage1_5; do
+-    rm -f $file || exit 1
 -done
--for file in ${pkglibdir}/*.mod ${pkglibdir}/*.lst ${pkglibdir}/*.img; do
+-for file in \
+-    ${pkglibdir}/stage1 ${pkglibdir}/stage2 ${pkglibdir}/*stage1_5; do
 -    cp -f $file ${grubdir} || exit 1
 -done
 -
- # Create the core image. First, auto-detect the filesystem module.
- fs_module=`$grub_probe --target=fs --device-map=${device_map} ${grubdir}`
- if test "x$fs_module" = x -a "x$modules" = x; then
---- grub-1.95/util/powerpc/ieee1275/grub-install.in~	2006-12-05 17:36:29.903649209 +0200
-+++ grub-1.95/util/powerpc/ieee1275/grub-install.in	2006-12-05 17:36:56.764254188 +0200
-@@ -28,7 +28,7 @@
- PACKAGE_VERSION=@PACKAGE_VERSION@
- target_cpu=@target_cpu@
- platform=@platform@
--pkglibdir=${libdir}/${PACKAGE_TARNAME}/${target_cpu}-${platform}
-+pkglibdir=${libdir}/${PACKAGE}
+ # Make a default file.
+ ${grub_set_default} --root-directory=${rootdir} default
  
- grub_setup=${sbindir}/grub-setup
- grub_mkimage=${bindir}/grub-mkimage
-@@ -131,16 +131,6 @@
- test -d "$bootdir" || mkdir "$bootdir" || exit 1
- test -d "$grubdir" || mkdir "$grubdir" || exit 1
- 
--# Copy the GRUB images to the GRUB directory.
--for file in ${grubdir}/*.mod ${grubdir}/*.lst ; do
--    if test -f $file; then
--	rm -f $file || exit 1
--    fi
--done
--for file in ${pkglibdir}/*.mod ${pkglibdir}/*.lst ; do
--    cp -f $file ${grubdir} || exit 1
--done
--
- # Create the core image with all modules, unless user specified a subset.
- # XXX probe for partition map and filesystem?
- if test "x$modules" = x; then
