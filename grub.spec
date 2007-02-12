@@ -8,9 +8,9 @@
 %bcond_with	static		# builds static version
 #
 Summary:	GRand Unified Bootloader
-Summary(de):	GRUB - ein Bootloader für x86
-Summary(pl):	GRUB - bootloader dla x86
-Summary(pt_BR):	Gerenciador de inicialização GRUB
+Summary(de.UTF-8):   GRUB - ein Bootloader fÃ¼r x86
+Summary(pl.UTF-8):   GRUB - bootloader dla x86
+Summary(pt_BR.UTF-8):   Gerenciador de inicializaÃ§Ã£o GRUB
 Name:		grub
 Version:	0.97
 Release:	2.1
@@ -65,46 +65,46 @@ it implements the Multiboot standard, which allows for flexible
 loading of multiple boot images (needed for modular kernels such as
 the GNU Hurd).
 
-%description -l de
+%description -l de.UTF-8
 GRUB (GRand Unified Boot-loader) ist ein Bootloader, der oft auf
 Rechnern eingesetzt wird, auf denen das freie Betriebssystem Linux
-läuft. GRUB löst den betagten LILO (Linux-Loader) ab.
+lÃ¤uft. GRUB lÃ¶st den betagten LILO (Linux-Loader) ab.
 
 GRUB wurde innerhalb des GNU Hurd-Projektes als Boot-Loader entwickelt
-und wird unter der GPL vertrieben. Aufgrund seiner höheren
-Flexibilität verdrängt GRUB in vielen Linux-Distributionen den
+und wird unter der GPL vertrieben. Aufgrund seiner hÃ¶heren
+FlexibilitÃ¤t verdrÃ¤ngt GRUB in vielen Linux-Distributionen den
 traditionellen Boot-Loader LILO.
 
-%description -l es
-Éste es GRUB - Grand Unified Boot Loader - un administrador de
-inicialización capaz de entrar en la mayoría de los sistemas
+%description -l es.UTF-8
+Ã‰ste es GRUB - Grand Unified Boot Loader - un administrador de
+inicializaciÃ³n capaz de entrar en la mayorÃ­a de los sistemas
 operacionales libres - Linux, FreeBSD, NetBSD, GNU Mach, etc. como
-también en la mayoría de los sistemas operacionales comerciales para
+tambiÃ©n en la mayorÃ­a de los sistemas operacionales comerciales para
 PC.
 
 El administrador GRUB puede ser una buena alternativa a LILO, para
-usuarios conmás experiencia y que deseen obtener más recursos de su
-cargador de inicialización (boot loader).
+usuarios conmÃ¡s experiencia y que deseen obtener mÃ¡s recursos de su
+cargador de inicializaciÃ³n (boot loader).
 
-%description -l pl
-GRUB jest bootloaderem na licencji GNU, maj±cym na celu unifikacjê
-procesu bootowania na systemach x86. Potrafi nie tylko ³adowaæ j±dra
-Linuksa i *BSD: posiada równie¿ implementacje standardu Multiboot,
-który pozwala na elastyczne ³adowanie wielu obrazów bootowalnych
-(czego wymagaj± modu³owe j±dra, takie jak GNU Hurd).
+%description -l pl.UTF-8
+GRUB jest bootloaderem na licencji GNU, majÄ…cym na celu unifikacjÄ™
+procesu bootowania na systemach x86. Potrafi nie tylko Å‚adowaÄ‡ jÄ…dra
+Linuksa i *BSD: posiada rÃ³wnieÅ¼ implementacje standardu Multiboot,
+ktÃ³ry pozwala na elastyczne Å‚adowanie wielu obrazÃ³w bootowalnych
+(czego wymagajÄ… moduÅ‚owe jÄ…dra, takie jak GNU Hurd).
 
-%description -l pt_BR
-Esse é o GRUB - Grand Unified Boot Loader - um gerenciador de boot
+%description -l pt_BR.UTF-8
+Esse Ã© o GRUB - Grand Unified Boot Loader - um gerenciador de boot
 capaz de entrar na maioria dos sistemas operacionais livres - Linux,
 FreeBSD, NetBSD, GNU Mach, etc. assim como na maioria dos sistemas
 operacionais comerciais para PC.
 
-O GRUB pode ser uma boa alternativa ao LILO, para usuários mais
-avançados e que querem mais recursos de seu boot loader.
+O GRUB pode ser uma boa alternativa ao LILO, para usuÃ¡rios mais
+avanÃ§ados e que querem mais recursos de seu boot loader.
 
 %package nb
 Summary:	Grub's network boot image for the Network Image Proposal
-Summary(pl):	Obraz dla gruba s³u¿±cy technologii Network Image Proposal
+Summary(pl.UTF-8):   Obraz dla gruba sÅ‚uÅ¼Ä…cy technologii Network Image Proposal
 Group:		Networking/Admin
 
 %description nb
@@ -113,15 +113,15 @@ some network boot loaders, such as Etherboot. This is mostly the same
 as Stage 2, but it also sets up a network and loads a configuration
 file from the network.
 
-%description nb -l pl
-To jest obraz s³u¿±cy zdalnemu uruchamianiu komputera bezdyskowego,
+%description nb -l pl.UTF-8
+To jest obraz sÅ‚uÅ¼Ä…cy zdalnemu uruchamianiu komputera bezdyskowego,
 oparty na standardzie nazwanym 'Network Image Proposal'. Jest niemal
-identyczny z tym ze Stage 2, ale uruchamia sieæ oraz ³aduje z niej
+identyczny z tym ze Stage 2, ale uruchamia sieÄ‡ oraz Å‚aduje z niej
 plik konfiguracyjny.
 
 %package pxe
 Summary:	Grub's network boot image for the Preboot Execution Environment
-Summary(pl):	Obraz dla gruba s³u¿±cy technologii Preboot Execution Environment
+Summary(pl.UTF-8):   Obraz dla gruba sÅ‚uÅ¼Ä…cy technologii Preboot Execution Environment
 Group:		Networking/Admin
 
 %description pxe
@@ -130,11 +130,11 @@ Environment used by several Netboot ROMs. This is identical to nbgrub,
 except for the format. This is mostly the same as Stage 2, but it also
 sets up a network and loads a configuration file from the network.
 
-%description pxe -l pl
-To jest obraz s³u¿±cy zdalnemu uruchamianiu komputera bezdyskowego,
+%description pxe -l pl.UTF-8
+To jest obraz sÅ‚uÅ¼Ä…cy zdalnemu uruchamianiu komputera bezdyskowego,
 oparty na standardzie nazwanym 'Preboot Execution Environment' (PXE).
-Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieæ oraz
-³aduje z niej plik konfiguracyjny.
+Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieÄ‡ oraz
+Å‚aduje z niej plik konfiguracyjny.
 
 %prep
 %setup -q
