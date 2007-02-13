@@ -8,9 +8,9 @@
 %bcond_with	static		# builds static version
 #
 Summary:	GRand Unified Bootloader
-Summary(de.UTF-8):   GRUB - ein Bootloader für x86
-Summary(pl.UTF-8):   GRUB - bootloader dla x86
-Summary(pt_BR.UTF-8):   Gerenciador de inicialização GRUB
+Summary(de.UTF-8):	GRUB - ein Bootloader für x86
+Summary(pl.UTF-8):	GRUB - bootloader dla x86
+Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
 Release:	2.1
@@ -104,7 +104,7 @@ avançados e que querem mais recursos de seu boot loader.
 
 %package nb
 Summary:	Grub's network boot image for the Network Image Proposal
-Summary(pl.UTF-8):   Obraz dla gruba służący technologii Network Image Proposal
+Summary(pl.UTF-8):	Obraz dla gruba służący technologii Network Image Proposal
 Group:		Networking/Admin
 
 %description nb
@@ -121,7 +121,7 @@ plik konfiguracyjny.
 
 %package pxe
 Summary:	Grub's network boot image for the Preboot Execution Environment
-Summary(pl.UTF-8):   Obraz dla gruba służący technologii Preboot Execution Environment
+Summary(pl.UTF-8):	Obraz dla gruba służący technologii Preboot Execution Environment
 Group:		Networking/Admin
 
 %description pxe
