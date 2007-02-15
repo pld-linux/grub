@@ -5,7 +5,7 @@
 # Conditional build:
 %bcond_with	splashimage	# removes some ethernet cards support
 				# (too much memory occupied?)
-%bcond_with	static		# builds static version
+%bcond_without	static		# don't build static version
 #
 Summary:	GRand Unified Bootloader
 Summary(de.UTF-8):	GRUB - ein Bootloader für x86
@@ -13,7 +13,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	2.1
+Release:	3
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -38,7 +38,7 @@ Patch11:	%{name}-i2o.patch
 Patch12:	%{name}-initrdmax.patch
 Patch13:	%{name}-gcc4.patch
 Patch14:	%{name}-useless.patch
-Patch15:	%{name}-0.97-reiser4-20050808.diff
+Patch15:	%{name}-ac.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
