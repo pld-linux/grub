@@ -1,0 +1,10 @@
+--- grub-0.97/configure.ac.orig	2005-05-08 04:36:03.000000000 +0200
++++ grub-0.97/configure.ac	2007-02-15 06:36:45.332239750 +0100
+@@ -56,6 +56,7 @@
+ 
+ AC_CHECK_TOOL(CC, gcc)
+ AC_PROG_CC
++AM_PROG_AS
+ # We need this for older versions of Autoconf.
+ _AM_DEPENDENCIES(CC)
+ 
