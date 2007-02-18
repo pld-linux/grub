@@ -278,6 +278,6 @@ fi
 %{_libdir}/grub/pxegrub
 %endif
 
-%files
+%files -n rc-boot-grub
 %defattr(644,root,root,755)
 /etc/sysconfig/rc-boot/%{name}_functions.sh
