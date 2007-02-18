@@ -13,7 +13,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	3
+Release:	4
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -136,6 +136,18 @@ oparty na standardzie nazwanym 'Preboot Execution Environment' (PXE).
 Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieć oraz
 ładuje z niej plik konfiguracyjny.
 
+%package -n rc-boot-grub
+Summary:	grub support for rc-boot
+Summary(pl.UTF-8):	Wsparcie gruba dla rc-boot
+Group:		Base
+Requires:	rc-boot
+
+%description -n rc-boot-grub
+grub support for rc-boot.
+
+%description -n rc-boot-grub -l pl.UTF-8
+Wsparcie gruba dla rc-boot.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -255,7 +267,6 @@ fi
 %attr(754,root,root) %{_sbindir}/*
 %{_infodir}/*.info*
 %{_mandir}/*/*
-/etc/sysconfig/rc-boot/%{name}_functions.sh
 
 %if !%{with splashimage}
 %files nb
@@ -266,3 +277,7 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/grub/pxegrub
 %endif
+
+%files
+%defattr(644,root,root,755)
+/etc/sysconfig/rc-boot/%{name}_functions.sh
