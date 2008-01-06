@@ -140,8 +140,9 @@ Jest niemal identyczny z tym ze Stage 2, ale uruchamia sieć oraz
 Summary:	grub support for rc-boot
 Summary(pl.UTF-8):	Wsparcie gruba dla rc-boot
 Group:		Base
-Requires:	rc-boot
 Requires:	%{name} = %{version}-%{release}
+Requires:	rc-boot
+Provides:	rc-boot-bootloader
 
 %description -n rc-boot-grub
 grub support for rc-boot.
