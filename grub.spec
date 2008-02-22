@@ -34,11 +34,12 @@ Patch7:		%{name}-special-device-names.patch
 Patch8:		%{name}-0.94-diskless-1.patch
 Patch9:		%{name}-0.94-diskless-fixtg3.patch
 Patch10:	%{name}-geometry-26kernel.patch
-Patch11:	%{name}-i2o.patch
+Patch11:	%{name}-cciss-devicemap.patch
 Patch12:	%{name}-initrdmax.patch
 Patch13:	%{name}-gcc4.patch
 Patch14:	%{name}-useless.patch
 Patch15:	%{name}-ac.patch
+Patch16:	%{name}-i2o.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -168,6 +169,7 @@ Wsparcie gruba dla rc-boot.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 rm -rf doc/*info*
 
