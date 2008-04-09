@@ -17,7 +17,7 @@ Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
-Release:	2
+Release:	7
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
