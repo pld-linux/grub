@@ -33,9 +33,11 @@ Patch6:		%{name}-graphics-bootterm.patch
 Patch7:		%{name}-special-device-names.patch
 Patch8:		%{name}-0.94-diskless-1.patch
 Patch9:		%{name}-0.94-diskless-fixtg3.patch
-Patch10:	%{name}-geometry-26kernel.patch
-Patch11:	%{name}-cciss-devicemap.patch
-Patch12:	%{name}-initrdmax.patch
+# from http://www.linuxfromscratch.org/patches/downloads/grub/
+Patch10:	%{name}-%{version}-disk_geometry-1.patch
+Patch11:	%{name}-%{version}-256byte_inode-1.patch
+#
+Patch12:	%{name}-cciss-devicemap.patch
 Patch13:	%{name}-gcc4.patch
 Patch14:	%{name}-useless.patch
 Patch15:	%{name}-ac.patch
@@ -45,7 +47,6 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel
-BuildRequires:	reiser4progs-devel
 %if %{with static}
 BuildRequires:	glibc-static
 BuildRequires:	ncurses-static
@@ -179,7 +180,6 @@ rm -rf doc/*info*
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-CFLAGS="-Os %{?debug:-g} -fno-strict-aliasing" ; export CFLAGS
 %if %{with static}
 LDFLAGS="-static"; export LDFLAGS
 %endif
