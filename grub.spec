@@ -17,7 +17,7 @@ Summary(pt_BR):	Gerenciador de inicialização GRUB
 Summary(de):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
-Release:	7
+Release:	8
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -37,9 +37,9 @@ Patch6:		%{name}-graphics-bootterm.patch
 Patch7:		%{name}-special-device-names.patch
 Patch8:		%{name}-0.94-diskless-1.patch
 Patch9:		%{name}-0.94-diskless-fixtg3.patch
-Patch10:	%{name}-geometry-26kernel.patch
-Patch11:	%{name}-cciss-devicemap.patch
-Patch12:	%{name}-initrdmax.patch
+Patch10:        %{name}-%{version}-disk_geometry-1.patch
+Patch11:        %{name}-%{version}-256byte_inode-1.patch
+Patch12:	%{name}-cciss-devicemap.patch
 Patch13:	%{name}-gcc4.patch
 Patch14:	%{name}-useless.patch
 Patch15:	%{name}-ac.patch
