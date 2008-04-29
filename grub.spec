@@ -12,9 +12,9 @@
 %endif
 #
 Summary:	GRand Unified Bootloader
+Summary(de.UTF-8):	GRUB - ein Bootloader für x86
 Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
-Summary(de.UTF-8):	GRUB - ein Bootloader für x86
 Name:		grub
 Version:	0.97
 Release:	8
@@ -37,8 +37,8 @@ Patch6:		%{name}-graphics-bootterm.patch
 Patch7:		%{name}-special-device-names.patch
 Patch8:		%{name}-0.94-diskless-1.patch
 Patch9:		%{name}-0.94-diskless-fixtg3.patch
-Patch10:        %{name}-%{version}-disk_geometry-1.patch
-Patch11:        %{name}-%{version}-256byte_inode-1.patch
+Patch10:	%{name}-%{version}-disk_geometry-1.patch
+Patch11:	%{name}-%{version}-256byte_inode-1.patch
 Patch12:	%{name}-cciss-devicemap.patch
 Patch13:	%{name}-gcc4.patch
 Patch14:	%{name}-useless.patch
@@ -50,8 +50,8 @@ BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel
 %if %{with static}
-BuildRequires:	ncurses-static
 BuildRequires:	glibc-static
+BuildRequires:	ncurses-static
 %endif
 # needed for 'cmp' program
 Requires:	diffutils
@@ -210,8 +210,8 @@ LDFLAGS="-static"; export LDFLAGS
 	--disable-auto-linux-mem-opt
 # if you want to enable following cards for pxeboot comment out patches 8 & 9
 # and comment out --enable-e1000 & --enable-tg3 cards:
-#       --enable-ns8390 \
-#       --enable-sis900
+#	   --enable-ns8390 \
+#	   --enable-sis900
 %{__make}
 
 %install
