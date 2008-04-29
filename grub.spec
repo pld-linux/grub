@@ -51,6 +51,10 @@ BuildRequires:	ncurses-devel
 %if %{with static}
 BuildRequires:	glibc-static
 BuildRequires:	ncurses-static
+%ifarch %{x8664}
+# 32bit glibc-static
+BuildRequires:	/usr/lib/libc.a
+%endif
 %endif
 # needed for 'cmp' program
 Requires:	diffutils
