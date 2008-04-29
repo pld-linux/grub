@@ -3,12 +3,11 @@
 # - check VGA patch - doesn't work good, 0.92 works fine
 #
 # Conditional build:
-%bcond_with	splashimage	# removes some ethernet cards support
-				# (too much memory occupied?)
-%ifarch %{x8664}
-%bcond_without	static		# builds shared version (requires 32bit glibc)
-%else
+%bcond_with	splashimage	# removes some ethernet cards support (too much memory occupied?)
 %bcond_with	static		# builds static version
+
+%ifarch %{x8664}
+%define	with_static	1
 %endif
 #
 Summary:	GRand Unified Bootloader
