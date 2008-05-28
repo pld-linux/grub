@@ -1,10 +1,11 @@
-#
 # TODO:
 # - check VGA patch - doesn't work good, 0.92 works fine
+# - upgrading grub makes installed grub in MBR lose track of menu.lst, with
+#   console access can write 'configfile /grub/menu.lst' but without console
+#   access your machine stays in grub on boot!
 #
 # Conditional build:
-%bcond_with	splashimage	# removes some ethernet cards support
-				# (too much memory occupied?)
+%bcond_with	splashimage	# removes some ethernet cards support (too much memory occupied?)
 %bcond_without	static		# don't build static version
 #
 Summary:	GRand Unified Bootloader
@@ -13,7 +14,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	9
+Release:	10
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -50,11 +51,14 @@ BuildRequires:	ncurses-devel
 BuildRequires:	glibc-static
 BuildRequires:	ncurses-static
 %endif
+%ifarch %{x8664}
+BuildRequires:	/usr/lib/libc.a
+%endif
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
 Obsoletes:	fedora-logos
-ExclusiveArch:	%{ix86}
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -254,10 +258,10 @@ if [ -L /boot/grub/menu.lst ] && [ -f /boot/grub/grub.conf ]; then
 	ln -sf menu.lst /boot/grub/grub.conf
 fi
 
-%post	-p	/sbin/postshell
+%post	-p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun	-p	/sbin/postshell
+%postun	-p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
 %files
@@ -272,7 +276,7 @@ fi
 %{_infodir}/*.info*
 %{_mandir}/*/*
 
-%if !%{with splashimage}
+%if %{without splashimage}
 %files nb
 %defattr(644,root,root,755)
 %{_libdir}/grub/nbgrub
