@@ -13,7 +13,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	7
+Release:	9
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -36,7 +36,6 @@ Patch9:		%{name}-0.94-diskless-fixtg3.patch
 # from http://www.linuxfromscratch.org/patches/downloads/grub/
 Patch10:	%{name}-%{version}-disk_geometry-1.patch
 Patch11:	%{name}-%{version}-256byte_inode-1.patch
-#
 Patch12:	%{name}-cciss-devicemap.patch
 Patch13:	%{name}-gcc4.patch
 Patch14:	%{name}-useless.patch
@@ -54,6 +53,7 @@ BuildRequires:	ncurses-static
 # needed for 'cmp' program
 Requires:	diffutils
 Provides:	bootloader
+Obsoletes:	fedora-logos
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
