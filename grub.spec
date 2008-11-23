@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	11
+Release:	12
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -268,7 +268,10 @@ fi
 %defattr(644,root,root,755)
 %doc TODO BUGS NEWS ChangeLog docs/menu.lst
 %dir %{_libdir}/grub
-%{_libdir}/grub/*stage*
+%{_libdir}/grub/stage1
+%{_libdir}/grub/*stage1_5
+%verify(not mtime) %{_libdir}/grub/stage2
+%{_libdir}/grub/stage2_eltorito
 %{_libdir}/grub/splash.xpm.gz
 %config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/menu.lst
 %attr(754,root,root) %{_bindir}/*
