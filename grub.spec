@@ -188,7 +188,7 @@ rm -rf doc/*info*
 LDFLAGS="-static"; export LDFLAGS
 %endif
 %configure \
-%if !%{with splashimage}
+%if %{without splashimage}
 	--enable-3c503 \
 	--enable-3c507 \
 	--enable-3c509 \
@@ -270,7 +270,7 @@ fi
 %dir %{_libdir}/grub
 %{_libdir}/grub/stage1
 %{_libdir}/grub/*stage1_5
-%verify(not mtime) %{_libdir}/grub/stage2
+%verify(not md5 mtime) %{_libdir}/grub/stage2
 %{_libdir}/grub/stage2_eltorito
 %{_libdir}/grub/splash.xpm.gz
 %config(noreplace) %verify(not md5 mtime size) %{_libdir}/grub/menu.lst
