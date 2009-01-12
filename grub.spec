@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	12
+Release:	13
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -27,21 +27,19 @@ Source4:	%{name}-splash.xpm.gz
 Patch0:		%{name}-install.in.patch
 Patch1:		%{name}-endedit.patch
 Patch2:		%{name}-append.patch
-Patch3:		%{name}-bootonce.patch
-Patch4:		%{name}-graphics.patch
-Patch5:		%{name}-splashimagehelp.patch
-Patch6:		%{name}-graphics-bootterm.patch
-Patch7:		%{name}-special-device-names.patch
-Patch8:		%{name}-0.94-diskless-1.patch
-Patch9:		%{name}-0.94-diskless-fixtg3.patch
+Patch3:		%{name}-graphics.patch
+Patch4:		%{name}-splashimagehelp.patch
+Patch5:		%{name}-graphics-bootterm.patch
+Patch6:		%{name}-special-device-names.patch
 # from http://www.linuxfromscratch.org/patches/downloads/grub/
-Patch10:	%{name}-%{version}-disk_geometry-1.patch
-Patch11:	%{name}-%{version}-256byte_inode-1.patch
-Patch12:	%{name}-cciss-devicemap.patch
-Patch13:	%{name}-gcc4.patch
-Patch14:	%{name}-useless.patch
-Patch15:	%{name}-ac.patch
-Patch16:	%{name}-i2o.patch
+Patch7:		%{name}-%{version}-disk_geometry-1.patch
+Patch8:		%{name}-%{version}-256byte_inode-1.patch
+Patch9:		%{name}-cciss-devicemap.patch
+Patch10:	%{name}-gcc4.patch
+Patch11:	%{name}-useless.patch
+Patch12:	%{name}-ac.patch
+Patch13:	%{name}-i2o.patch
+Patch14:	%{name}-pxe.patch
 URL:		http://www.gnu.org/software/grub/grub.en.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -161,20 +159,18 @@ Wsparcie gruba dla rc-boot.
 %patch0 -p1
 %patch1 -p0
 %patch2 -p1
-#%%patch3 -p1
+%{?with_splashimage:%patch3 -p1}
 %{?with_splashimage:%patch4 -p1}
 %{?with_splashimage:%patch5 -p1}
-%{?with_splashimage:%patch6 -p1}
+%patch6 -p1
 %patch7 -p1
-#%patch8 -p1
-#%patch9 -p1
-%patch10 -p1
+%patch8 -p1
+%patch9 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
+%patch14 -p0
+%patch10 -p1
 
 rm -rf doc/*info*
 
@@ -189,44 +185,28 @@ LDFLAGS="-static"; export LDFLAGS
 %endif
 %configure \
 %if %{without splashimage}
-	--enable-3c503 \
-	--enable-3c507 \
-	--enable-3c509 \
-	--enable-3c529 \
 	--enable-3c595 \
 	--enable-3c90x \
-	--enable-compex-rl2000-fix \
-	--enable-cs89x0 \
 	--enable-davicom \
-	--enable-depca \
-	--enable-diskless \
 	--enable-e1000 \
-	--enable-eepro \
 	--enable-eepro100 \
 	--enable-epic100 \
-	--enable-exos205 \
-	--enable-lance \
 	--enable-natsemi \
-	--enable-ne \
-	--enable-ne2100 \
-	--enable-ni5010 \
-	--enable-ni5210 \
-	--enable-ni6510 \
+	--enable-ns8390 \
+	--enable-pcnet32 \
 	--enable-rtl8139 \
-	--enable-sk-g16 \
-	--enable-smc9000 \
+	--enable-r8169 \
+	--enable-sis900 \
 	--enable-tg3 \
-	--enable-tiara \
 	--enable-tulip \
+	--enable-tlan \
 	--enable-via-rhine \
 	--enable-w89c840 \
-	--enable-wd \
+	--enable-compex-rl2000-fix \
+	--enable-pxe \
+	--enable-diskless \
 %endif
 	--disable-auto-linux-mem-opt
-# if you want to enable following cards for pxeboot comment out patches 8 & 9
-# and comment out --enable-e1000 & --enable-tg3 cards:
-#	   --enable-ns8390 \
-#	   --enable-sis900
 %{__make}
 
 %install
