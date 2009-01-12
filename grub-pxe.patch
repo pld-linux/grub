@@ -575,15 +575,6 @@ Index: configure.ac
 ===================================================================
 --- configure.ac	(.../upstream/grub-0.97)	(revision 112)
 +++ configure.ac	(.../trunk)	(revision 112)
-@@ -13,7 +13,7 @@
- dnl USE OF THIS SOFTWARE.
- 
- AC_PREREQ(2.57)
--AC_INIT([GRUB], [0.97], [bug-grub@gnu.org])
-+AC_INIT([GRUB], [0.97-os.7], [adam@os.inf.tu-dresden.de])
- AC_CONFIG_SRCDIR([stage2/stage2.c])
- AC_CONFIG_HEADER([config.h])
- AM_INIT_AUTOMAKE
 @@ -110,7 +110,7 @@
        CFLAGS=$saved_CFLAGS
      ])
