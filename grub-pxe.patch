@@ -3249,15 +3249,6 @@ Index: stage2/asm.S
 ===================================================================
 --- stage2/asm.S	(.../upstream/grub-0.97)	(revision 112)
 +++ stage2/asm.S	(.../trunk)	(revision 112)
-@@ -98,7 +98,7 @@
- 	.string VERSION
- VARIABLE(config_file)
- #ifndef STAGE1_5
--	.string "/boot/grub/menu.lst"
-+	.string "(nd)/tftp/menu.lst"
- #else   /* STAGE1_5 */
- 	.long	0xffffffff
- 	.string "/boot/grub/stage2"
 @@ -205,6 +205,55 @@
  	jmp EXT_C(hard_stop)
  
@@ -3651,32 +3642,6 @@ Index: stage2/shared.h
  
  int check_password(char *entered, char* expected, password_t type);
  #endif
-Index: stage2/fsys_ffs.c
-===================================================================
---- stage2/fsys_ffs.c	(.../upstream/grub-0.97)	(revision 112)
-+++ stage2/fsys_ffs.c	(.../trunk)	(revision 112)
-@@ -50,7 +50,7 @@
-  * the rights to redistribute these changes.
-  *
-  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd
-- *	$Id$
-+ *	$Id$
-  */
- 
- #ifdef FSYS_FFS
-Index: stage2/tparm.c
-===================================================================
---- stage2/tparm.c	(.../upstream/grub-0.97)	(revision 112)
-+++ stage2/tparm.c	(.../trunk)	(revision 112)
-@@ -63,7 +63,7 @@
- #define MAX_FORMAT_LEN 256
- #define max(a,b) ((a) > (b) ? (a) : (b))
- 
--//MODULE_ID("$Id$")
-+//MODULE_ID("$Id$")
- 
- /*
-  *	char *
 Index: stage2/common.c
 ===================================================================
 --- stage2/common.c	(.../upstream/grub-0.97)	(revision 112)
