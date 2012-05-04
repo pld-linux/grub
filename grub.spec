@@ -7,8 +7,8 @@
 # Conditional build:
 %bcond_with	splashimage	# removes some ethernet cards support (too much memory occupied?)
 %bcond_without	static		# don't build static version
-#
-Summary:	GRand Unified Bootloader
+
+Summary:	GRUB Legacy: GRand Unified Bootloader
 Summary(de.UTF-8):	GRUB - ein Bootloader für x86
 Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
@@ -40,7 +40,7 @@ Patch11:	%{name}-useless.patch
 Patch12:	%{name}-ac.patch
 Patch13:	%{name}-i2o.patch
 Patch14:	%{name}-pxe.patch
-URL:		http://www.gnu.org/software/grub/grub.en.html
+URL:		https://www.gnu.org/software/grub/grub-legacy.html
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -63,11 +63,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir		/boot
 
 %description
-GRUB is a GPLed bootloader intended to unify bootloading across x86
-operating systems. In addition to loading the Linux and *BSD kernels,
-it implements the Multiboot standard, which allows for flexible
-loading of multiple boot images (needed for modular kernels such as
-the GNU Hurd).
+GRUB Legacy is a GPLed bootloader intended to unify bootloading across
+x86 operating systems. In addition to loading the Linux and *BSD
+kernels, it implements the Multiboot standard, which allows for
+flexible loading of multiple boot images (needed for modular kernels
+such as the GNU Hurd).
+
+GRUB Legacy is not actively developed any longer. Only bugfixes will
+be made so that GRUB Legacy can stil be used for older systems.
 
 %description -l de.UTF-8
 GRUB (GRand Unified Boot-loader) ist ein Bootloader, der oft auf
