@@ -48747,7 +48747,7 @@ Index: netboot/sis900.c
  {
 -    u32 status, to, nstype;
 +    u32 to, nstype;
-     u32 tx_status;
+     volatile u32 tx_status;
      
      /* Stop the transmitter */
 -    outl(TxDIS, ioaddr + cr);

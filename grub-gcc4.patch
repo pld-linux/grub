@@ -40,3 +40,23 @@
          /* wait */ ;
  
      if (currticks() >= to) {
+--- grub-0.97/netboot/sis900.c~	2014-01-26 20:00:16.000000000 +0100
++++ grub-0.97/netboot/sis900.c	2014-01-26 20:01:57.941485281 +0100
+@@ -901,7 +901,7 @@
+                 const char  *p)     /* Packet */
+ {
+     u32 status, to, nstype;
+-    u32 tx_status;
++    volatile u32 tx_status;
+     
+     /* Stop the transmitter */
+     outl(TxDIS, ioaddr + cr);
+@@ -940,7 +940,7 @@
+ 
+     to = currticks() + TX_TIMEOUT;
+ 
+-    while ((((volatile u32) tx_status=txd.cmdsts) & OWN) && (currticks() < to))
++    while (((tx_status=txd.cmdsts) & OWN) && (currticks() < to))
+         /* wait */ ;
+ 
+     if (currticks() >= to) {

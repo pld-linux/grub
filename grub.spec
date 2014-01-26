@@ -40,6 +40,7 @@ Patch11:	%{name}-useless.patch
 Patch12:	%{name}-ac.patch
 Patch13:	%{name}-i2o.patch
 Patch14:	%{name}-pxe.patch
+Patch15:	%{name}-am.patch
 URL:		https://www.gnu.org/software/grub/grub-legacy.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -50,6 +51,7 @@ BuildRequires:	glibc-static
 BuildRequires:	ncurses-static
 %endif
 %ifarch %{x8664}
+BuildRequires:	gcc-multilib
 BuildRequires:	/usr/lib/libc.a
 %endif
 # needed for 'cmp' program
@@ -58,6 +60,9 @@ Provides:	bootloader
 Obsoletes:	fedora-logos
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_ssp_cflags	%{nil}
+%define		filterout	-fPIC
 
 %define		_sbindir	/sbin
 %define		_libdir		/boot
@@ -174,6 +179,7 @@ Wsparcie gruba dla rc-boot.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p0
+%patch15 -p1
 
 rm -rf doc/*info*
 
