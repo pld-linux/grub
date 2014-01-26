@@ -181,7 +181,7 @@ Wsparcie gruba dla rc-boot.
 %patch14 -p0
 %patch15 -p1
 
-%{__rm} doc/*info*
+%{__rm} docs/*info*
 
 %build
 %{__libtoolize}
