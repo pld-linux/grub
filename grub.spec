@@ -183,7 +183,7 @@ Wsparcie gruba dla rc-boot.
 %patch15 -p1
 %patch16 -p1
 
-%{__rm} docs/*info*
+%{__rm} docs/*.info*
 
 %build
 %{__libtoolize}
