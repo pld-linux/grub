@@ -181,7 +181,7 @@ Wsparcie gruba dla rc-boot.
 %patch14 -p0
 %patch15 -p1
 
-rm -rf doc/*info*
+%{__rm} doc/*info*
 
 %build
 %{__libtoolize}
@@ -225,15 +225,25 @@ install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mv -f $RPM_BUILD_ROOT%{_libdir}/grub/%{_arch}-*/* \
+%ifarch %{ix86}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/grub/i386-*/* \
 	$RPM_BUILD_ROOT%{_libdir}/grub/
+%else
+%ifarch %{x866}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/grub/x86_64-*/* \
+	$RPM_BUILD_ROOT%{_libdir}/grub/
+%else
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/grub/%{_arch}-*/* \
+	$RPM_BUILD_ROOT%{_libdir}/grub/
+%endif
+%endif
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/grub/menu.lst
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 install %{SOURCE4} $RPM_BUILD_ROOT%{_libdir}/grub/splash.xpm.gz
 
-rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+%{__rm} $RPM_BUILD_ROOT%{_infodir}/dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -242,8 +252,8 @@ rm -rf $RPM_BUILD_ROOT
 # grubby will not work if /boot/grub/menu.lst is symlink
 # so make sure menu.lst is file and grub.conf (if any) is symlink
 if [ -L /boot/grub/menu.lst ] && [ -f /boot/grub/grub.conf ]; then
-	mv -f /boot/grub/menu.lst{,.rpmsave}
-	mv -f /boot/grub/{grub.conf,menu.lst}
+	%{__mv} -f /boot/grub/menu.lst{,.rpmsave}
+	%{__mv} -f /boot/grub/{grub.conf,menu.lst}
 	ln -sf menu.lst /boot/grub/grub.conf
 fi
 
