@@ -571,19 +571,116 @@ files
 substvars
 
 
+Index: acinclude.m4
+===================================================================
+--- acinclude.m4	(.../upstream/grub-0.97)	(revision 117)
++++ acinclude.m4	(.../trunk)	(revision 117)
+@@ -56,12 +56,12 @@
+   AC_MSG_ERROR([${CC-cc} cannot compile C source code])
+ fi
+ grub_cv_prog_objcopy_absolute=yes
+-for link_addr in 2000 8000 7C00; do
+-  if AC_TRY_COMMAND([${CC-cc} ${CFLAGS} -nostdlib -Wl,-N -Wl,-Ttext -Wl,$link_addr conftest.o -o conftest.exec]); then :
++for link_addr in 0x2000 0x8000 0x7C00; do
++  if AC_TRY_COMMAND([${CC-cc} ${CFLAGS} -nostdlib -Wl,-N -Wl,-Ttext, -Wl,-Ttext -Wl,$link_addr conftest.o -o conftest.exec]); then :
+   else
+     AC_MSG_ERROR([${CC-cc} cannot link at address $link_addr])
+   fi
+-  if AC_TRY_COMMAND([${OBJCOPY-objcopy} -O binary conftest.exec conftest]); then :
++  if AC_TRY_COMMAND([${OBJCOPY-objcopy} --only-section=.text -O binary conftest.exec conftest]); then :
+   else
+     AC_MSG_ERROR([${OBJCOPY-objcopy} cannot create binary files])
+   fi
 Index: configure.ac
 ===================================================================
 --- configure.ac	(.../upstream/grub-0.97)	(revision 112)
 +++ configure.ac	(.../trunk)	(revision 112)
-@@ -110,7 +110,7 @@
+@@ -58,6 +58,8 @@
+ AC_PROG_CC
+ # We need this for older versions of Autoconf.
+ _AM_DEPENDENCIES(CC)
++AM_PROG_CC_C_O
++AM_PROG_AS
+ 
+ dnl Because recent automake complains about AS, set it here.
+ CCAS="$CC"
+@@ -86,13 +88,13 @@
+     fi
+     STAGE1_CFLAGS="-O2"
+     GRUB_CFLAGS="-O2"
+-    AC_CACHE_CHECK([whether optimization for size works], size_flag, [
++    AC_CACHE_CHECK([whether optimization for size works], grub_cv_size_flag, [
+       saved_CFLAGS=$CFLAGS
+       CFLAGS="-Os -g"
+-      AC_TRY_COMPILE(, , size_flag=yes, size_flag=no)
++      AC_TRY_COMPILE(, , grub_cv_size_flag=yes, grub_cv_size_flag=no)
        CFLAGS=$saved_CFLAGS
      ])
-     if test "x$no_stack_protector_flag" = xyes; then
+-    if test "x$size_flag" = xyes; then
++    if test "x$grub_cv_size_flag" = xyes; then
+       STAGE2_CFLAGS="-Os -g2 -fno-strict-aliasing"
+     else
+       STAGE2_CFLAGS="-O2 -g2 -fno-strict-aliasing -fno-strength-reduce -fno-unroll-loops"
+@@ -100,17 +102,17 @@
+     # OpenBSD has a GCC extension for protecting applications from
+     # stack smashing attacks, but GRUB doesn't want this feature.
+     AC_CACHE_CHECK([whether gcc has -fno-stack-protector],
+-		   no_stack_protector_flag, [
++		   grub_cv_no_stack_protector_flag, [
+       saved_CFLAGS=$CFLAGS
+       CFLAGS="-fno-stack-protector"
+       AC_TRY_COMPILE(,
+ 		     ,
+-		     no_stack_protector_flag=yes,
+-		     no_stack_protector_flag=no)
++		     grub_cv_no_stack_protector_flag=yes,
++		     grub_cv_no_stack_protector_flag=no)
+       CFLAGS=$saved_CFLAGS
+     ])
+-    if test "x$no_stack_protector_flag" = xyes; then
 -      STAGE2_CFLAGS="$STAGE2_CFLAGS -fno-stack-protector"
++    if test "x$grub_cv_no_stack_protector_flag" = xyes; then
 +      CFLAGS="$CFLAGS -fno-stack-protector"
      fi
    fi
  fi
+@@ -123,30 +125,30 @@
+ CPPFLAGS="$CPPFLAGS -Wall -Wmissing-prototypes -Wunused -Wshadow"
+ CPPFLAGS="$CPPFLAGS -Wpointer-arith"
+ 
+-AC_CACHE_CHECK([whether -Wundef works], undef_flag, [
++AC_CACHE_CHECK([whether -Wundef works], grub_cv_undef_flag, [
+   saved_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="-Wundef"
+-  AC_TRY_COMPILE(, , undef_flag=yes, undef_flag=no)
++  AC_TRY_COMPILE(, , grub_cv_undef_flag=yes, grub_cv_undef_flag=no)
+   CPPFLAGS="$saved_CPPFLAGS"
+ ])
+ 
+ # The options `-falign-*' are supported by gcc 3.0 or later.
+ # Probably it is sufficient to only check for -falign-loops.
+-AC_CACHE_CHECK([whether -falign-loops works], [falign_loop_flag], [
++AC_CACHE_CHECK([whether -falign-loops works], [grub_cv_falign_loop_flag], [
+   saved_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="-falign-loops=1"
+-  AC_TRY_COMPILE(, , [falign_loop_flag=yes], [falign_loop_flag=no])
++  AC_TRY_COMPILE(, , [grub_cv_falign_loop_flag=yes], [grub_cv_falign_loop_flag=no])
+   CPPFLAGS="$saved_CPPFLAGS"
+ ])
+ 
+ # Force no alignment to save space.
+-if test "x$falign_loop_flag" = xyes; then
++if test "x$grub_cv_falign_loop_flag" = xyes; then
+   CPPFLAGS="$CPPFLAGS -falign-jumps=1 -falign-loops=1 -falign-functions=1"
+ else
+   CPPFLAGS="$CPPFLAGS -malign-jumps=1 -malign-loops=1 -malign-functions=1"
+ fi
+ 
+-if test "x$undef_flag" = xyes; then
++if test "x$grub_cv_undef_flag" = xyes; then
+   CPPFLAGS="$CPPFLAGS -Wundef"
+ fi
+ 
 @@ -317,7 +317,7 @@
    [  --disable-packet-retransmission
                            turn off packet retransmission])
@@ -3682,6 +3779,12 @@ Index: stage2/Makefile.am
  endif
  
  if DISKLESS_SUPPORT
+@@ -271,4 +271,4 @@
+ # General rule for making a raw binary.
+ SUFFIXES = .exec
+ .exec:
+-	$(OBJCOPY) -O binary $< $@
++	$(OBJCOPY) -R .note -R .comment -R .note.gnu.build-id -R .reginfo -R .rel.dyn -O binary $< $@
 
 Property changes on: stage2
 ___________________________________________________________________
@@ -37620,16 +37723,16 @@ Index: netboot/rpc.h
 +	long length;
 +	long data[0];
 +};
-+extern long *add_auth_unix(struct opaque_auth *auth);
-+extern long *add_auth_none(struct opaque_auth *auth);
++extern long *add_auth_unix(struct opaque_auth *_auth);
++extern long *add_auth_none(struct opaque_auth *_auth);
 +
 +typedef struct AUTH AUTH;
 +struct AUTH{
 +	long *(* add_auth)(struct opaque_auth *);
 +
 +};
-+extern AUTH *__authnone_create(AUTH *auth);
-+extern void auth_destroy(AUTH *auth);
++extern AUTH *__authnone_create(AUTH *_auth);
++extern void auth_destroy(AUTH *_auth);
 +
 +/*
 + * Client rpc handle.
@@ -38043,7 +38146,7 @@ Index: netboot/pxe_tftp.c
 +
 +  memset(&bp, 0, sizeof(bp));
 +
-+  undi.pxs->cached_info.PacketType = PXENV_PACKET_TYPE_BINL_REPLY;
++  undi.pxs->cached_info.PacketType = PXENV_PACKET_TYPE_DHCP_ACK;
 +  undi.pxs->cached_info.BufferSize = sizeof(BOOTPLAYER);
 +  undi.pxs->cached_info.Buffer.segment = SEGMENT(&bp);
 +  undi.pxs->cached_info.Buffer.offset  = OFFSET(&bp);
