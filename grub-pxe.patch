@@ -3485,19 +3485,6 @@ Index: stage2/asm.S
  	call	EXT_C(prot_to_real)
  	.code16
  
-Index: stage2/imgact_aout.h
-===================================================================
---- stage2/imgact_aout.h	(.../upstream/grub-0.97)	(revision 112)
-+++ stage2/imgact_aout.h	(.../trunk)	(revision 112)
-@@ -32,7 +32,7 @@
-  * SUCH DAMAGE.
-  *
-  *	from: @(#)exec.h	8.1 (Berkeley) 6/11/93
-- *	$Id$
-+ *	$Id$
-  */
- /*
-  *  11/23/95 - Kludge to get "ntohl" null macro added.  -- ESB
 Index: stage2/boot.c
 ===================================================================
 --- stage2/boot.c	(.../upstream/grub-0.97)	(revision 112)
@@ -3901,7 +3888,7 @@ Index: netboot/sk_g16.h
 - * of the GNU Public License, incorporated herein by reference.
 - *
 - * Module         : sk_g16.h
-- * Version        : $Revision$
+- * Version        : $Revision: 1.3 $
 - *
 - * Author         : M.Hipp (mhipp@student.uni-tuebingen.de)
 - * changes by     : Patrick J.D. Weichmann
@@ -3912,7 +3899,7 @@ Index: netboot/sk_g16.h
 - *                  the am7990 (LANCE) chip used for writing a
 - *                  network device driver which uses this chip
 - *
-- * $Log$
+- * $Log: sk_g16.h,v $
 - * Revision 1.3  2000/07/29 19:22:54  okuji
 - * update the network support to etherboot-4.6.4.
 - *
@@ -8833,7 +8820,7 @@ Index: netboot/3c509.c
 -
 -3c509 support added by Serge Babkin (babkin@hq.icb.chel.su)
 -
--$Id$
+-$Id: 3c509.c,v 1.4 2002/01/02 21:56:40 okuji Exp $
 -
 -***************************************************************************/
 -
@@ -13130,12 +13117,12 @@ Index: netboot/sk_g16.c
 - *
 - * Module         : sk_g16.c
 - *
-- * Version        : $Revision$
+- * Version        : $Revision: 1.4 $
 - *
 - * Author         : Patrick J.D. Weichmann
 - *
 - * Date Created   : 94/05/26
-- * Last Updated   : $Date$
+- * Last Updated   : $Date: 2002/01/02 21:56:40 $
 - *
 - * Description    : Schneider & Koch G16 Ethernet Device Driver for
 - *                  Linux Kernel >= 1.1.22
