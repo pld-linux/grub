@@ -1,0 +1,16 @@
+--- grub-0.97/docs/grub.texi~	2005-05-08 04:59:59.000000000 +0200
++++ grub-0.97/docs/grub.texi	2014-01-26 21:09:24.318122654 +0100
+@@ -2945,11 +2945,8 @@
+ BIOS. We know these are defective in this way:
+ 
+ @table @asis
+-@item
+-Fujitsu LifeBook 400 BIOS version 31J0103A
++@item Fujitsu LifeBook 400 BIOS version 31J0103A
+-
+-@item
+-HP Vectra XU 6/200 BIOS version GG.06.11
++@item HP Vectra XU 6/200 BIOS version GG.06.11
+ @end table
+ 
+ @strong{Caution2:} A number of BIOSes don't return a correct LBA support

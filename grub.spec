@@ -41,6 +41,7 @@ Patch12:	%{name}-ac.patch
 Patch13:	%{name}-i2o.patch
 Patch14:	%{name}-pxe.patch
 Patch15:	%{name}-am.patch
+Patch16:	%{name}-info.patch
 URL:		https://www.gnu.org/software/grub/grub-legacy.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -180,6 +181,7 @@ Wsparcie gruba dla rc-boot.
 %patch13 -p1
 %patch14 -p0
 %patch15 -p1
+%patch16 -p1
 
 %{__rm} docs/*info*
 
