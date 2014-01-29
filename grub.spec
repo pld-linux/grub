@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	GRUB - bootloader dla x86
 Summary(pt_BR.UTF-8):	Gerenciador de inicialização GRUB
 Name:		grub
 Version:	0.97
-Release:	17
+Release:	18
 License:	GPL
 Group:		Base
 Source0:	ftp://alpha.gnu.org/gnu/grub/%{name}-%{version}.tar.gz
@@ -62,8 +62,11 @@ Obsoletes:	fedora-logos
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+# Leave tootal control over cflags to grub
+# messing with it causes severe breakega, like hangs on boot
+%define		_fortify_cflags	%{nil}
 %define		_ssp_cflags	%{nil}
-%define		filterout	-fPIC
+%define		rpmcflags	%{nil}
 
 %define		_sbindir	/sbin
 %define		_libdir		/boot
