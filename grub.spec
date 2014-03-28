@@ -52,8 +52,8 @@ BuildRequires:	glibc-static
 BuildRequires:	ncurses-static
 %endif
 %ifarch %{x8664}
-BuildRequires:	gcc-multilib
 BuildRequires:	/usr/lib/libc.a
+BuildRequires:	gcc-multilib
 %endif
 # needed for 'cmp' program
 Requires:	diffutils
@@ -243,10 +243,12 @@ install -d $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
 %endif
 %endif
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/grub/menu.lst
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
-install %{SOURCE4} $RPM_BUILD_ROOT%{_libdir}/grub/splash.xpm.gz
+install -p %{SOURCE2} $RPM_BUILD_ROOT%{_sbindir}/rebootin
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/grub/menu.lst
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_libdir}/grub/splash.xpm.gz
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/rc-boot
+
+ls -l $RPM_BUILD_ROOT/boot/grub
 
 %clean
 rm -rf $RPM_BUILD_ROOT
